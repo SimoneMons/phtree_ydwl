@@ -1,0 +1,98 @@
+ # object creation using YouTube which was imported in the beginning
+            yt = YouTube(dwl_link)
+
+            print(yt.title)
+            song_name = yt.title
+
+            video = yt.streams.get_highest_resolution().download(SAVE_PATH)
+
+            AudioSegment.from_file(video).export(SAVE_PATH + '\\' + song_name + '.mp3', format='mp3')
+
+
+Ramazzotti
+https://www.youtube.com/watch?v=UojBaKX5Vz4&list=RDEMDHx1mzcs_wPqWOntgHDScQ&index=1
+
+https://www.youtube.com/watch?v=0_U4D3Wy-7k&list=RDEMDHx1mzcs_wPqWOntgHDScQ&index=5
+
+https://www.youtube.com/watch?v=DAIxrSvq6bo&list=RDEMDHx1mzcs_wPqWOntgHDScQ&index=49
+
+https://www.youtube.com/watch?v=OK_KvknlJxA&list=RDEMDHx1mzcs_wPqWOntgHDScQ&index=50
+
+https://www.youtube.com/watch?v=UojBaKX5Vz4
+
+link introducido por el usuario
+https://www.youtube.com/watch?v=RB-RcX5DS5A&list=RDRB-RcX5DS5A&start_radio=1&t=7
+
+https://www.youtube.com/playlist?list=PLwiyx1dc3P2JR9N8gQaQN_BCvlSlap7re
+
+https://www.youtube.com/playlist?list=RDEMDHx1mzcs_wPqWOntgHDScQ
+
+link para el download
+https://www.youtube.com/watch?v=rsKBsV4V_eM
+
+
+link de la lista
+https://www.youtube.com/watch?list=RDf8FliT43ZC4
+
+
+
+
+pyinstaller --noconsole --onefile --paths C:\Proyectos\phtree\venv\Lib\site-packages -F --add-data "./ffmpeg/*;./ffmpeg/" -F --add-data "./images/*;./images/" youdwl_lv1.py
+
+pyinstaller --console --paths C:\Proyectos\phtree\venv\Lib\site-packages -F --add-data "./ffmpeg/*;./ffmpeg/" youtube_dwl.py
+
+pyinstaller --console --onefile --paths C:\Proyectos\phtree\phtree_ydwl\venv\Lib\site-packages -F --add-data "./ffmpeg/*;./ffmpeg/" -F --add-data "./images/*;./images/" main_ydwl_lv1.py --name ydwl
+
+pyinstaller --console --onefile --paths C:\Proyectos\phtree\phtree_ydwl\venv\Lib\site-packages main_ydwl_lv1.py --name ydwl
+
+--windowed --icon=app.ico
+
+pyinstaller -w -F -i "icon.ico" script.py
+
+youtube-dl -i -f mp4 --yes-playlist 'https://www.youtube.com/watch?v=7Vy8970q0Xc&list=PLwJ2VKmefmxpUJEGB1ff6yUZ5Zd7Gegn2'
+
+Path
+C:\ffmpeg\bin
+
+If you want to use external files with your project you need to bundle it to your output executable. Which whenever your executable runs it would extract all dependencies into the temp directory and use it in your code. For this, you can add-data flag.
+
+First, download precompiled binaries from here. Then extract contents to a folder called ffmpeg (next to script file). In below example, the app (script.py) tries to play a sample video with ffplay. I assumed that the path of input video would be passed as an external argument to the program.
+
+import subprocess
+import os
+import sys
+
+
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
+
+
+def play():
+   ffplay_path = "./ffmpeg/ffplay.exe"
+   if len(sys.argv) > 1:
+      file_path = sys.argv[1]
+      p = subprocess.Popen([resource_path(ffplay_path), file_path])
+   else:
+      print("No file passed as argument!")
+
+
+if __name__ == "__main__":
+   play()
+Use below command to generate the executable:
+
+pyinstaller -F --add-data "./ffmpeg/*;./ffmpeg/" script.py
+And use the program like this:
+
+script.exe sample.mp4
+
+
+aaaa = pyqtSignal(str)
+msg = "Downloading File"
+self.aaaa.emit(msg)
+
+
+self.combo_choice.addItem("Only video")
+        self.combo_choice.addItem("Only music")
+        self.combo_choice.addItem("Video & music")
