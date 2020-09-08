@@ -16,8 +16,6 @@ class App(QMainWindow):
 
         self.show()
 
-
-
     @pyqtSlot()
     def on_click(self):
         print("\n")

@@ -19,9 +19,10 @@ ydl_audio = {
 class DownloadVideo(QThread):
     signal = pyqtSignal('PyQt_PyObject')
 
-    def __init__(self, dwl_link, parent=None):
+    def __init__(self, dwl_link, video_id_list, parent=None):
         super(DownloadVideo, self).__init__(parent)
         self.dwl_link = dwl_link
+        self.video_id_list = video_id_list
 
 
     def run(self):

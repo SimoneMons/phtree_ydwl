@@ -63,6 +63,24 @@ class youdwnl_tabs(QWidget):
         self.tab1.linktextbox.resize(300, 20)
         self.tab1.linktextbox.returnPressed.connect(self.oh_no)
 
+        # check box playlist
+        self.tab1.boxpl = QCheckBox("Download related videos", self.tab1)
+        # self.box.stateChanged.connect(self.clickBox)
+        self.tab1.boxpl.move(200, 70)
+        self.tab1.boxpl.resize(320, 40)
+
+        # combo choice
+        self.tab1.combo_choice = QComboBox(self.tab1)
+        self.tab1.combo_choice.addItem("Video & Music")
+        self.tab1.combo_choice.addItem("Only Music")
+        self.tab1.combo_choice.addItem("Only Video")
+        self.tab1.combo_choice.setStyleSheet("QComboBox"
+                                        "{"
+                                        "background-color: white;"
+                                        "}")
+        self.tab1.combo_choice.move(70, 80)
+        self.tab1.combo_choice.resize(100, 20)
+
         # Message text
         self.tab1.textmessage = QLabel(self.tab1)
         self.tab1.textmessage.setStyleSheet('color: black')
@@ -77,19 +95,48 @@ class youdwnl_tabs(QWidget):
         self.tab1.textmessage.setText('Video download completed')
 
     def oh_no(self):
-        # link to download
+        # Link to download
         dwl_link = self.tab1.linktextbox.text()
 
+        # Validate the link
+        try:
+            request = requests.get(dwl_link)
+            print('Web site exists')
+        except:
+            print('Web site does not exist')
 
-        # Pass the function to execute
-        self.dwnl_thread = DownloadVideo(dwl_link)  # Any other args, kwargs are passed to the run function
+        # id of videos to download
+        video_id_list = []
+
+
+        if 'playlist' in dwl_link:
+            print('It is a playlist')
+
+        # validate if the link is a list of videos
+        elif 'watch?v=' and '&list' in dwl_link:
+            # Related videos to download
+            r = requests.get(dwl_link)
+            page_source = r.text
+            for m in re.finditer('":{"url":"/watch?', page_source):
+                video_id = page_source[m.start() + 19:m.end() + 90]
+                print('videossssss', video_id)
+                if 'index=' in video_id:
+                    video_id = video_id.split('\\')[0]
+                    if video_id not in video_id_list:
+                        video_id_list.append(video_id)
+
+            # Original link
+            result = dwl_link.find('list')
+            # print('link result', result)
+            dwl_link = dwl_link[0:result]
+            print('linkkk0 ', dwl_link)
+
+        # Define the thread
+        self.dwnl_thread = DownloadVideo(dwl_link, video_id_list)  # Any other args, kwargs are passed to the run function
         self.dwnl_thread.signal.connect(self.finished)
 
-        # Execute
+        # Execute the thread
         self.dwnl_thread.start()
-
-        print(dwl_link)
-
         self.tab1.textmessage.setText('Downloading video')
 
 
