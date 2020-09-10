@@ -4,7 +4,7 @@ import re
 import youtube_dl
 
 from PyQt5.QtWidgets import *
-from PyQt5 import QtGui
+from PyQt5 import QtGui, QtCore
 from run_trheads import DownloadData
 
 from youtubesearchpython import SearchVideos, SearchPlaylists
@@ -65,23 +65,23 @@ class youdwnl_tabs(QWidget):
         self.tab1.label = QLabel(self.tab1)
         self.tab1.label.setStyleSheet('color: black')
         self.tab1.label.setFont(QtGui.QFont('Arial', 10))
-        self.tab1.label.setText("Insert the downloading video link or playlist")
+        self.tab1.label.setText("Insert Video Link or Playlist to download")
         self.tab1.label.setGeometry(50, 20, 300, 20)
 
         # Download link tab 1
         self.tab1.linktextbox = QLineEdit(self.tab1)
-        self.tab1.linktextbox.move(50, 40)
-        self.tab1.linktextbox.resize(300, 20)
+        self.tab1.linktextbox.move(50, 45)
+        self.tab1.linktextbox.resize(320, 20)
         self.tab1.linktextbox.returnPressed.connect(self.oh_no)
 
 
         # check box playlist
-        self.tab1.boxpl = QCheckBox("Download related videos", self.tab1)
+        self.tab1.boxpl = QCheckBox("Download related videos in the list", self.tab1)
         # self.box.stateChanged.connect(self.clickBox)
-        self.tab1.boxpl.move(200, 70)
+        self.tab1.boxpl.move(220, 70)
         self.tab1.boxpl.resize(320, 40)
 
-        # combo choice
+        # Combo choice
         self.tab1.combo_choice = QComboBox(self.tab1)
         self.tab1.combo_choice.addItem("Video & Music")
         self.tab1.combo_choice.addItem("Only Music")
@@ -90,10 +90,10 @@ class youdwnl_tabs(QWidget):
         #                                "{"
         #                                "background-color: white;"
         #                                "}")
-        self.tab1.combo_choice.move(70, 80)
+        self.tab1.combo_choice.move(85, 80)
         self.tab1.combo_choice.resize(100, 20)
 
-        # Create dwl button
+        # Download button
         self.tab1.dwl = QPushButton('Download', self.tab1)
         self.tab1.dwl.setToolTip('Click here to download your video')
         self.tab1.dwl.setFont(QtGui.QFont('Arial', 9))
@@ -106,7 +106,7 @@ class youdwnl_tabs(QWidget):
         self.tab1.dwl.clicked.connect(self.oh_no)
 
 
-        # Create close button
+        # Create clear button
         self.tab1.cls = QPushButton('Clear data', self.tab1)
         self.tab1.cls.setToolTip('Click here to claer the data')
         self.tab1.cls.setFont(QtGui.QFont('Arial', 9))
@@ -116,14 +116,14 @@ class youdwnl_tabs(QWidget):
         #                       "background-color: #C0C0C0; border-radius: 10px;"
         #                       "}")
         # self.cls.move(210, 125)
-        self.tab1.cls.clicked.connect(self.clear_fn)
+        self.tab1.cls.clicked.connect(self.clear_tab1)
 
 
         # Message text
         self.tab1.textmessage = QLabel(self.tab1)
         self.tab1.textmessage.setStyleSheet('color: black')
         self.tab1.textmessage.setText("Ready to download")
-        self.tab1.textmessage.setGeometry(100, 165, 300, 15)
+        self.tab1.textmessage.setGeometry(340, 130, 300, 15)
 
         # Information
         self.tab1.instructions1 = QLabel(self.tab1)
@@ -151,42 +151,106 @@ class youdwnl_tabs(QWidget):
         self.tab1.instructions4.setStyleSheet('color: black')
         self.tab1.instructions4.setFont(QtGui.QFont('Arial', 7))
         self.tab1.instructions4.setText("Enjoy, by Mons 2020")
-        self.tab1.instructions4.setGeometry(385, 380, 300, 20)
+        self.tab1.instructions4.setGeometry(440, 425, 300, 20)
 
+
+    def tab2UI(self):
         # Information Search tab 2
         self.tab2.label = QLabel(self.tab2)
         self.tab2.label.setStyleSheet('color: black')
         self.tab2.label.setFont(QtGui.QFont('Arial', 10))
-        self.tab2.label.setText("Search your music to download")
+        self.tab2.label.setText("Search your video or music to download")
         self.tab2.label.setGeometry(50, 20, 300, 20)
 
-    def tab2UI(self):
         # Search tab 2
         self.tab2.searchtextbox = QLineEdit(self.tab2)
-        self.tab2.searchtextbox.move(50, 40)
-        self.tab2.searchtextbox.resize(300, 20)
+        self.tab2.searchtextbox.move(50, 45)
+        self.tab2.searchtextbox.resize(320, 20)
         self.tab2.searchtextbox.returnPressed.connect(self.oh_no_search)
 
-        # Play list or single videos
-        self.tab2.dwnl_choice = QComboBox(self.tab2)
-        self.tab2.dwnl_choice.addItem("Single Videos")
-        self.tab2.dwnl_choice.addItem("Playlist")
+        # Combo choice
+        self.tab2.combo_choice = QComboBox(self.tab2)
+        self.tab2.combo_choice.addItem("Video & Music")
+        self.tab2.combo_choice.addItem("Only Music")
+        self.tab2.combo_choice.addItem("Only Video")
         # self.tab1.combo_choice.setStyleSheet("QComboBox"
         #                                "{"
         #                                "background-color: white;"
         #                                "}")
-        self.tab2.dwnl_choice.move(390, 40)
-        self.tab2.dwnl_choice.resize(100, 20)
+        self.tab2.combo_choice.move(85, 80)
+        self.tab2.combo_choice.resize(100, 20)
+
+        self._toggle = True
+
+        # check box video
+        self.tab2.boxvd = QCheckBox("Search videos", self.tab2)
+        #self.tab2.boxvd.setChecked(False)
+        #self.tab2.boxvd.stateChanged.connect(self.change_checkbox_video)
+        self.tab2.boxvd.setChecked(self._toggle)
+        self.tab2.boxvd.clicked.connect(self.toggle)
+        self.tab2.boxvd.move(200, 70)
+        self.tab2.boxvd.resize(320, 40)
+
+        # check box playlist
+        self.tab2.boxpl = QCheckBox("Search playlist", self.tab2)
+        #self.tab2.boxpl.setChecked(False)
+        #self.tab2.boxpl.stateChanged.connect(self.change_checkbox_pllist)
+        self.tab2.boxpl.setChecked(not self._toggle)
+        self.tab2.boxpl.clicked.connect(self.toggle)
+        self.tab2.boxpl.move(320, 70)
+        self.tab2.boxpl.resize(320, 40)
+
+        # Search button
+        self.tab2.dwl = QPushButton('Search', self.tab2)
+        self.tab2.dwl.setToolTip('Click here to search your videos or playlist')
+        self.tab2.dwl.setFont(QtGui.QFont('Arial', 9))
+        # self.tab1.dwl.setStyleSheet("QPushButton"
+        #                       "{"
+        #                       "background-color: #C0C0C0; border-radius: 10px;"
+        #                       "}")
+        self.tab2.dwl.setGeometry(50, 125, 100, 25)
+        # self.dwl.move(90, 125)
+        self.tab2.dwl.clicked.connect(self.oh_no_search)
+
+        # Download button
+        self.tab2.dwl = QPushButton('Download', self.tab2)
+        self.tab2.dwl.setToolTip('Click here to download your video')
+        self.tab2.dwl.setFont(QtGui.QFont('Arial', 9))
+        # self.tab1.dwl.setStyleSheet("QPushButton"
+        #                       "{"
+        #                       "background-color: #C0C0C0; border-radius: 10px;"
+        #                       "}")
+        self.tab2.dwl.setGeometry(160, 125, 100, 25)
+        # self.dwl.move(90, 125)
+        self.tab2.dwl.clicked.connect(self.download_search_result)
+
+        # Create clear button
+        self.tab2.cls = QPushButton('Clear data', self.tab2)
+        self.tab2.cls.setToolTip('Click here to claer the data')
+        self.tab2.cls.setFont(QtGui.QFont('Arial', 9))
+        self.tab2.cls.setGeometry(270, 125, 100, 25)
+        # self.tab1.cls.setStyleSheet("QPushButton"
+        #                       "{"
+        #                       "background-color: #C0C0C0; border-radius: 10px;"
+        #                       "}")
+        # self.cls.move(210, 125)
+        self.tab2.cls.clicked.connect(self.clear_tab2)
+
+        # Message text
+        self.tab2.textmessage = QLabel(self.tab2)
+        self.tab2.textmessage.setStyleSheet('color: black')
+        self.tab2.textmessage.setText("Ready to download")
+        self.tab2.textmessage.setGeometry(390, 130, 300, 15)
 
         # Search result
         self.tab2.title = QPlainTextEdit(self.tab2)
-        self.tab2.title.setGeometry(50, 70, 300, 350)
+        self.tab2.title.setGeometry(30, 165, 520, 270)
 
     def tab3UI(self):
         # Information
         self.tab3.info = QPlainTextEdit(self.tab3)
-        self.tab3.info.setGeometry(50, 70, 470, 350)
-        self.tab3.info.insertPlainText('With this program you can download videos and music from Youtube' + "\n" + "\n")
+        self.tab3.info.setGeometry(30, 40, 515, 350)
+        self.tab3.info.insertPlainText('Download videos and music from Youtube' + "\n" + "\n" + "\n")
         self.tab3.info.insertPlainText(
             'Simple link example:' + "\n" + "\n")
         self.tab3.info.insertPlainText(
@@ -206,13 +270,40 @@ class youdwnl_tabs(QWidget):
         self.layout.addWidget(self.tabs)
         self.setLayout(self.layout)
 
+    @QtCore.pyqtSlot()
+    def toggle(self):
+        self._toggle = not self._toggle
+        self.tab2.boxvd.setChecked(self._toggle)
+        self.tab2.boxpl.setChecked(not self._toggle)
+        self.tab2.title.clear()
+
+
+
     def finished(self):
         self.tab1.textmessage.setText('Data download completed')
         print('Finito')
 
-    def clear_fn(self):
+    def clear_tab1(self):
         self.tab1.linktextbox.setText('')
         self.tab1.boxpl.setChecked(False)
+
+    def clear_tab2(self):
+        self.tab2.searchtextbox.setText('')
+        self.tab2.title.clear()
+
+    def download_search_result(self):
+        # Download Video & Music
+        dwl_choice = 'Video & Music'
+
+        # Define the thread
+        self.dwnl_thread = DownloadData(video_id_list_search,
+                                        dwl_choice)  # Any other args, kwargs are passed to the run function
+        self.dwnl_thread.signal.connect(self.finished)
+
+        # Execute the thread
+        self.dwnl_thread.start()
+        self.tab2.textmessage.setText('Downloading data')
+
 
     def oh_no(self):
         # Link to download
@@ -283,30 +374,31 @@ class youdwnl_tabs(QWidget):
         # Data to search to download
         search_data = self.tab2.searchtextbox.text()
 
-        download_choice = str(self.tab2.dwnl_choice.currentText())
 
-        if download_choice == 'Single Videos':
+        video = self.tab2.boxvd.checkState()
+
+        playlist = self.tab2.boxpl.checkState()
+
+        #print(video, playlist)
+
+        if self.tab2.boxvd.checkState() == 2:
             search = SearchVideos(search_data, offset=1, mode="json", max_results=20)
-        elif download_choice == 'Playlist':
-            search = SearchPlaylists("cold play", offset = 1, mode = "json", max_results = 20)
         else:
-            search = SearchVideos(search_data, offset=1, mode="json", max_results=20)
+            search = SearchPlaylists(search_data, offset=1, mode="json", max_results=20)
 
-        # print(search.result())
+        search_data = json.loads(search.result())
 
-        aaa = json.loads(search.result())
-
-        bbb = aaa['search_result']
-
-        for d in bbb:
-            print(d['id'])
-            self.tab2.title.insertPlainText(d['title'] + "\n" + "\n")
-
-        print(bbb)
+        search_result_dict = search_data['search_result']
 
 
+        # id of videos to download
+        global video_id_list_search
+        video_id_list_search = []
 
-
+        for link in search_result_dict:
+            print(link['link'])
+            self.tab2.title.insertPlainText(link['title'] + "\n" + "\n")
+            video_id_list_search.append(link['link'])
 
 
 

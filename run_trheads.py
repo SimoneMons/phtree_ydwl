@@ -31,7 +31,6 @@ class DownloadData(QThread):
         self.video_id_list = video_id_list
         self.dwl_choice = dwl_choice
 
-
     def run(self):
         # Download videos
 
@@ -130,7 +129,6 @@ class DownloadData(QThread):
 
                     # Generate audio
                     # pycharm exe
-                    print('Holaaaaaaaaaaaaaaaaaaa sssssssss')
                     if filename_new_mp3 not in os.listdir(audio_path):
                         os.system(ffmpeg_path + ' -i ' + resource_path(video_path + video_name) +
                                   ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + resource_path(audio_path + audio_name))
