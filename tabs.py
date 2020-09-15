@@ -2,9 +2,12 @@ import os, sys
 import requests
 import re
 import youtube_dl
+import urllib.request
 
 from PyQt5.QtWidgets import *
 from PyQt5 import QtGui, QtCore
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QPixmap
 from run_trheads import DownloadData
 
 from youtubesearchpython import SearchVideos, SearchPlaylists
@@ -54,7 +57,6 @@ class youdwnl_tabs(QWidget):
         self.tab2UI()
         self.tab3UI()
 
-
     def tab1UI(self):
         # Create first tab
         self.tab1.layout = QVBoxLayout(self)
@@ -74,7 +76,6 @@ class youdwnl_tabs(QWidget):
         self.tab1.linktextbox.resize(320, 20)
         self.tab1.linktextbox.returnPressed.connect(self.oh_no)
 
-
         # check box playlist
         self.tab1.boxpl = QCheckBox("Download related videos in the list", self.tab1)
         # self.box.stateChanged.connect(self.clickBox)
@@ -86,7 +87,7 @@ class youdwnl_tabs(QWidget):
         self.tab1.combo_choice.addItem("Video & Music")
         self.tab1.combo_choice.addItem("Only Music")
         self.tab1.combo_choice.addItem("Only Video")
-        #self.tab1.combo_choice.setStyleSheet("QComboBox"
+        # self.tab1.combo_choice.setStyleSheet("QComboBox"
         #                                "{"
         #                                "background-color: white;"
         #                                "}")
@@ -97,7 +98,7 @@ class youdwnl_tabs(QWidget):
         self.tab1.dwl = QPushButton('Download', self.tab1)
         self.tab1.dwl.setToolTip('Click here to download your video')
         self.tab1.dwl.setFont(QtGui.QFont('Arial', 9))
-        #self.tab1.dwl.setStyleSheet("QPushButton"
+        # self.tab1.dwl.setStyleSheet("QPushButton"
         #                       "{"
         #                       "background-color: #C0C0C0; border-radius: 10px;"
         #                       "}")
@@ -105,19 +106,17 @@ class youdwnl_tabs(QWidget):
         # self.dwl.move(90, 125)
         self.tab1.dwl.clicked.connect(self.oh_no)
 
-
         # Create clear button
         self.tab1.cls = QPushButton('Clear data', self.tab1)
         self.tab1.cls.setToolTip('Click here to claer the data')
         self.tab1.cls.setFont(QtGui.QFont('Arial', 9))
         self.tab1.cls.setGeometry(210, 125, 100, 25)
-        #self.tab1.cls.setStyleSheet("QPushButton"
+        # self.tab1.cls.setStyleSheet("QPushButton"
         #                       "{"
         #                       "background-color: #C0C0C0; border-radius: 10px;"
         #                       "}")
         # self.cls.move(210, 125)
         self.tab1.cls.clicked.connect(self.clear_tab1)
-
 
         # Message text
         self.tab1.textmessage = QLabel(self.tab1)
@@ -153,7 +152,6 @@ class youdwnl_tabs(QWidget):
         self.tab1.instructions4.setText("Enjoy, by Mons 2020")
         self.tab1.instructions4.setGeometry(440, 425, 300, 20)
 
-
     def tab2UI(self):
         # Information Search tab 2
         self.tab2.label = QLabel(self.tab2)
@@ -184,8 +182,8 @@ class youdwnl_tabs(QWidget):
 
         # check box video
         self.tab2.boxvd = QCheckBox("Search videos", self.tab2)
-        #self.tab2.boxvd.setChecked(False)
-        #self.tab2.boxvd.stateChanged.connect(self.change_checkbox_video)
+        # self.tab2.boxvd.setChecked(False)
+        # self.tab2.boxvd.stateChanged.connect(self.change_checkbox_video)
         self.tab2.boxvd.setChecked(self._toggle)
         self.tab2.boxvd.clicked.connect(self.toggle)
         self.tab2.boxvd.move(200, 70)
@@ -193,8 +191,8 @@ class youdwnl_tabs(QWidget):
 
         # check box playlist
         self.tab2.boxpl = QCheckBox("Search playlist", self.tab2)
-        #self.tab2.boxpl.setChecked(False)
-        #self.tab2.boxpl.stateChanged.connect(self.change_checkbox_pllist)
+        # self.tab2.boxpl.setChecked(False)
+        # self.tab2.boxpl.stateChanged.connect(self.change_checkbox_pllist)
         self.tab2.boxpl.setChecked(not self._toggle)
         self.tab2.boxpl.clicked.connect(self.toggle)
         self.tab2.boxpl.move(320, 70)
@@ -243,8 +241,16 @@ class youdwnl_tabs(QWidget):
         self.tab2.textmessage.setGeometry(390, 130, 300, 15)
 
         # Search result
-        self.tab2.title = QPlainTextEdit(self.tab2)
-        self.tab2.title.setGeometry(30, 165, 520, 270)
+        self.tab2.tableWidget = QTableWidget(self.tab2)
+        self.tab2.tableWidget.setRowCount(20)
+        self.tab2.tableWidget.setColumnCount(3)
+        self.tab2.tableWidget.setGeometry(20, 170, 535, 270)
+        #self.tab2.tableWidget.horizontalHeader().setVisible(False)
+        self.tab2.tableWidget.setHorizontalHeaderLabels(['', 'Title', 'Link'])
+        self.tab2.tableWidget.horizontalHeader().setStyleSheet("QHeaderView::section { border-bottom: 1px solid green; }")
+        self.tab2.tableWidget.verticalHeader().setVisible(False)
+        self.tab2.tableWidget.setShowGrid(False)
+        self.tab2.tableWidget.setVisible(False)
 
     def tab3UI(self):
         # Information
@@ -262,7 +268,7 @@ class youdwnl_tabs(QWidget):
         self.tab3.info.insertPlainText(
             'List of video link example:' + "\n" + "\n")
         self.tab3.info.insertPlainText(
-            'https://www.youtube.com/watch?v=0_U4D3Wy-7k&list=RDEMDHx1mzcs_wPqWOntgHDScQ&index=5' + "\n" + "\n" )
+            'https://www.youtube.com/watch?v=0_U4D3Wy-7k&list=RDEMDHx1mzcs_wPqWOntgHDScQ&index=5' + "\n" + "\n")
         self.tab3.info.insertPlainText(
             "In this case, if you want to download all of them, mark the check box: 'Download all related videos'" + "\n" + "\n")
 
@@ -275,9 +281,9 @@ class youdwnl_tabs(QWidget):
         self._toggle = not self._toggle
         self.tab2.boxvd.setChecked(self._toggle)
         self.tab2.boxpl.setChecked(not self._toggle)
-        self.tab2.title.clear()
-
-
+        self.tab2.tableWidget.setVisible(False)
+        self.tab2.searchtextbox.setText('')
+        self.tab2.textmessage.setText("Ready to download")
 
     def finished(self):
         self.tab1.textmessage.setText('Data download completed')
@@ -289,7 +295,9 @@ class youdwnl_tabs(QWidget):
 
     def clear_tab2(self):
         self.tab2.searchtextbox.setText('')
-        self.tab2.title.clear()
+        self.tab2.textmessage.setText("Ready to download")
+        #self.tab2.title.clear()
+        self.tab2.tableWidget.setVisible(False)
 
     def download_search_result(self):
         # Download Video & Music
@@ -303,7 +311,6 @@ class youdwnl_tabs(QWidget):
         # Execute the thread
         self.dwnl_thread.start()
         self.tab2.textmessage.setText('Downloading data')
-
 
     def oh_no(self):
         # Link to download
@@ -323,6 +330,9 @@ class youdwnl_tabs(QWidget):
             print('Web site exists')
         except:
             print('Web site does not exist')
+            self.tab1.linktextbox.clear()
+            return
+
 
         # id of videos to download
         video_id_list = []
@@ -356,53 +366,92 @@ class youdwnl_tabs(QWidget):
 
         print(video_id_list)
 
-
         # Define the thread
-        self.dwnl_thread = DownloadData(video_id_list, dwl_choice)  # Any other args, kwargs are passed to the run function
+        self.dwnl_thread = DownloadData(video_id_list,
+                                        dwl_choice)  # Any other args, kwargs are passed to the run function
         self.dwnl_thread.signal.connect(self.finished)
-
 
         # Execute the thread
         self.dwnl_thread.start()
         self.tab1.textmessage.setText('Downloading data')
 
-
     def oh_no_search(self):
         # Reset data result list
-        self.tab2.title.clear()
+        # self.tab2.title.clear()
 
         # Data to search to download
         search_data = self.tab2.searchtextbox.text()
-
 
         video = self.tab2.boxvd.checkState()
 
         playlist = self.tab2.boxpl.checkState()
 
-        #print(video, playlist)
+        print(video, playlist)
+
+        max_results = 20
 
         if self.tab2.boxvd.checkState() == 2:
-            search = SearchVideos(search_data, offset=1, mode="json", max_results=20)
+            search = SearchVideos(search_data, offset=1, mode="json", max_results=max_results)
         else:
-            search = SearchPlaylists(search_data, offset=1, mode="json", max_results=20)
+            search = SearchPlaylists(search_data, offset=1, mode="json", max_results=max_results)
 
         search_data = json.loads(search.result())
 
         search_result_dict = search_data['search_result']
 
+        print(search_result_dict)
 
         # id of videos to download
         global video_id_list_search
         video_id_list_search = []
 
+        # help list of labels
+        labels_list = []
+        for i in range(max_results):
+            labels_list.append('lable' + str(i))
+
+        print(labels_list)
+
+        self.tab2.tableWidget.setVisible(True)
+
+
+        #self.tab2.tableWidget.setItem(0, 0, QTableWidgetItem("Name"))
+        #self.tab2.tableWidget.setItem(0, 1, QTableWidgetItem("Email"))
+
+        i = 0
         for link in search_result_dict:
             print(link['link'])
-            self.tab2.title.insertPlainText(link['title'] + "\n" + "\n")
+            # Image
+            url = link['thumbnails'][0]
+            print(url)
+
+            data = urllib.request.urlopen(url).read()
+            image = QtGui.QImage()
+            image.loadFromData(data)
+
+            # loading image
+            self.pixmap = QPixmap(image)
+
+            pixmap4 = self.pixmap.scaled(70, 100, QtCore.Qt.KeepAspectRatio)
+
+            pippo = labels_list[i]
+            self.tab2.pippo = QLabel(self.tab2)
+
+            self.tab2.pippo.setPixmap(pixmap4)
+
+
+            self.tab2.tableWidget.setCellWidget(i, 0, self.tab2.pippo)
+            self.tab2.tableWidget.setItem(i, 1, QTableWidgetItem(link['title']))
+            self.tab2.tableWidget.setItem(i, 2, QTableWidgetItem(link['link']))
+
+            self.tab2.tableWidget.resizeColumnsToContents()
+
+            self.tab2.pippo.show()
+
+            # self.tab2.scrollArea.setWidget(self.tab2.pippo)
+
+            # self.tab2.title.insertPlainText(link['title'] + "\n" + "\n")
+            # self.tab2.title.insertPlainText(link['link'] + "\n" + "\n")
             video_id_list_search.append(link['link'])
 
-
-
-
-
-
-
+            i = i + 1

@@ -35,11 +35,11 @@ class DownloadData(QThread):
         # Download videos
 
         # .exe
-        # ffmpeg_path = "./ffmpeg/ffmpeg.exe"
+        ffmpeg_path = "./ffmpeg/ffmpeg.exe"
 
 
         # pycharm exe
-        ffmpeg_path = ".\\ffmpeg\\ffmpeg.exe"
+        #ffmpeg_path = ".\\ffmpeg\\ffmpeg.exe"
 
         # create directories
         video_directory = os.path.join(SAVE_PATH, '_video')
@@ -81,12 +81,12 @@ class DownloadData(QThread):
                 print('old ', filename_old)
                 print('new ', filename_new)
                 # pycharm exe
-                os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
-                          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
+                #os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
+                #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
                 # exe
-                # os.system(resource_path(ffmpeg_path) + ' -i ' + audio_path + '\\' + filename_new +
-                #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
+                os.system(resource_path(ffmpeg_path) + ' -i ' + audio_path + '\\' + filename_new +
+                          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
                 os.remove(audio_path + '\\' + filename_new)
 
@@ -129,14 +129,14 @@ class DownloadData(QThread):
 
                     # Generate audio
                     # pycharm exe
-                    if filename_new_mp3 not in os.listdir(audio_path):
-                        os.system(ffmpeg_path + ' -i ' + resource_path(video_path + video_name) +
-                                  ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + resource_path(audio_path + audio_name))
+                    #if filename_new_mp3 not in os.listdir(audio_path):
+                    #    os.system(ffmpeg_path + ' -i ' + resource_path(video_path + video_name) +
+                    #              ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + resource_path(audio_path + audio_name))
 
                     # .exe
-                    # if filename_new_mp3 not in os.listdir(audio_path):
-                    #    os.system(resource_path(ffmpeg_path) + ' -i ' + resource_path(video_path + video_name) +
-                    #              ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + resource_path(audio_path + audio_name))
+                    if filename_new_mp3 not in os.listdir(audio_path):
+                        os.system(resource_path(ffmpeg_path) + ' -i ' + resource_path(video_path + video_name) +
+                                  ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + resource_path(audio_path + audio_name))
 
         self.signal.emit('Holaaaaaaa')
 
