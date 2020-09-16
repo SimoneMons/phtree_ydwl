@@ -35,7 +35,8 @@ link de la lista
 https://www.youtube.com/watch?list=RDf8FliT43ZC4
 
 
-
+Playlist with private video
+https://www.youtube.com/playlist?list=PL5kkvCjEh6RRlUTcFGT7tORq0w-464z_L
 
 pyinstaller --noconsole --onefile --paths C:\Proyectos\phtree\venv\Lib\site-packages -F --add-data "./ffmpeg/*;./ffmpeg/" -F --add-data "./images/*;./images/" youdwl_lv1.py
 
@@ -43,7 +44,7 @@ pyinstaller --console --paths C:\Proyectos\phtree\venv\Lib\site-packages -F --ad
 
 pyinstaller --console --onefile --paths C:\Proyectos\phtree\phtree_ydwl\venv\Lib\site-packages main_ydwl_lv1.py --name ydwl
 
-pyinstaller --console --onefile --paths C:\Proyectos\phtree\phtree_ydwl\venv\Lib\site-packages -F --add-data "./ffmpeg/*;./ffmpeg/" -F --add-data "./images/*;./images/" main_youdwnl.py --name ydwl
+pyinstaller --console --onefile --icon=totoro1.ico --paths C:\Proyectos\phtree\phtree_ydwl\venv\Lib\site-packages -F --add-data "./ffmpeg/*;./ffmpeg/" -F --add-data "./images/*;./images/" main_youdwnl.py --name ydwl
 
 
 --windowed --icon=app.ico

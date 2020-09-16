@@ -19,6 +19,9 @@ SAVE_PATH = os.path.expanduser('~/Downloads')
 ydl_video = {
     'format': 'best',
     'dumpjson': True,
+    'ignore-errors': True,
+    'skip-unavailable-fragments': True,
+    'continue': True,
     'outtmpl': SAVE_PATH + '/_video/%(title)s.%(ext)s',
 }
 
@@ -61,7 +64,7 @@ class youdwnl_tabs(QWidget):
         # Create first tab
         self.tab1.layout = QVBoxLayout(self)
         self.tab1.setLayout(self.tab1.layout)
-        # self.tab1.setStyleSheet("background-image: url(./images/istockphoto-1172479732-170667a.jpg)")
+        #self.tab1.setStyleSheet("background-image: url(./images/captura.png)")
 
         # Information tab 1
         self.tab1.label = QLabel(self.tab1)
@@ -150,7 +153,33 @@ class youdwnl_tabs(QWidget):
         self.tab1.instructions4.setStyleSheet('color: black')
         self.tab1.instructions4.setFont(QtGui.QFont('Arial', 7))
         self.tab1.instructions4.setText("Enjoy, by Mons 2020")
-        self.tab1.instructions4.setGeometry(440, 425, 300, 20)
+        self.tab1.instructions4.setGeometry(445, 425, 300, 20)
+
+        # photo
+        self.tab1.photo_label = QLabel(self.tab1)
+
+        photo_path = './images/Captura.png'
+
+        # Pycharm
+        #pixmap = QPixmap(photo_path)
+
+        # Exe
+        pixmap = QPixmap(resource_path(photo_path))
+
+        self.tab1.photo_label.setPixmap(pixmap)
+        self.tab1.photo_label.setGeometry(330, 350, 111, 89)
+
+        # .exe
+        # background_image_path = "./images/istockphoto-1172479732-170667a.jpg"
+        # icon_image_path = "./images/totoro.png"
+
+        # pycharm exe
+        background_image_path = "C:\Proyectos\phtree\phtree_ydwl\images\\istockphoto-1172479732-170667a.jpg"
+        #icon_image_path = "C:\Proyectos\phtree\phtree_ydwl\images\\totoro.png"
+
+        # Icon
+        # self.setWindowIcon(QIcon(icon_image_path))
+        #self.setWindowIcon(QIcon(resource_path(icon_image_path)))
 
     def tab2UI(self):
         # Information Search tab 2
@@ -414,41 +443,35 @@ class youdwnl_tabs(QWidget):
 
         self.tab2.tableWidget.setVisible(True)
 
-
-        #self.tab2.tableWidget.setItem(0, 0, QTableWidgetItem("Name"))
-        #self.tab2.tableWidget.setItem(0, 1, QTableWidgetItem("Email"))
-
         i = 0
         for link in search_result_dict:
             print(link['link'])
-            # Image
-            url = link['thumbnails'][0]
-            print(url)
 
-            data = urllib.request.urlopen(url).read()
-            image = QtGui.QImage()
-            image.loadFromData(data)
+            # Load images only for videos and not playlist
+            if self.tab2.boxvd.checkState() == 2:
+                url = link['thumbnails'][0]
+                print(url)
 
-            # loading image
-            self.pixmap = QPixmap(image)
+                data = urllib.request.urlopen(url).read()
+                image = QtGui.QImage()
+                image.loadFromData(data)
 
-            pixmap4 = self.pixmap.scaled(70, 100, QtCore.Qt.KeepAspectRatio)
+                # loading image
+                self.pixmap = QPixmap(image)
 
-            pippo = labels_list[i]
-            self.tab2.pippo = QLabel(self.tab2)
+                pixmap4 = self.pixmap.scaled(70, 100, QtCore.Qt.KeepAspectRatio)
 
-            self.tab2.pippo.setPixmap(pixmap4)
+                pippo = labels_list[i]
+                self.tab2.pippo = QLabel(self.tab2)
+                self.tab2.pippo.setPixmap(pixmap4)
+                self.tab2.tableWidget.setCellWidget(i, 0, self.tab2.pippo)
+                self.tab2.pippo.show()
+            else:
+                self.tab2.tableWidget.setItem(i, 0, QTableWidgetItem('Playlist'))
 
-
-            self.tab2.tableWidget.setCellWidget(i, 0, self.tab2.pippo)
             self.tab2.tableWidget.setItem(i, 1, QTableWidgetItem(link['title']))
             self.tab2.tableWidget.setItem(i, 2, QTableWidgetItem(link['link']))
-
             self.tab2.tableWidget.resizeColumnsToContents()
-
-            self.tab2.pippo.show()
-
-            # self.tab2.scrollArea.setWidget(self.tab2.pippo)
 
             # self.tab2.title.insertPlainText(link['title'] + "\n" + "\n")
             # self.tab2.title.insertPlainText(link['link'] + "\n" + "\n")
