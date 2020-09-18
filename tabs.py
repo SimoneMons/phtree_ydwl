@@ -52,11 +52,11 @@ class youdwnl_tabs(QWidget):
         # self.tabs.setFixedSize(600, 400)
 
         # Add tabs
-        #self.tabs.addTab(self.tab1, "Link")
+        # self.tabs.addTab(self.tab1, "Link")
         self.tabs.addTab(self.tab2, "Search")
         self.tabs.addTab(self.tab3, "Info")
 
-        #self.tab1UI()
+        # self.tab1UI()
         self.tab2UI()
         self.tab3UI()
 
@@ -64,7 +64,7 @@ class youdwnl_tabs(QWidget):
         # Create first tab
         self.tab1.layout = QVBoxLayout(self)
         self.tab1.setLayout(self.tab1.layout)
-        #self.tab1.setStyleSheet("background-image: url(./images/captura.png)")
+        # self.tab1.setStyleSheet("background-image: url(./images/captura.png)")
 
         # Information tab 1
         self.tab1.label = QLabel(self.tab1)
@@ -164,7 +164,7 @@ class youdwnl_tabs(QWidget):
         pixmap = QPixmap(photo_path)
 
         # Exe
-        #pixmap = QPixmap(resource_path(photo_path))
+        # pixmap = QPixmap(resource_path(photo_path))
 
         self.tab1.photo_label.setPixmap(pixmap)
         self.tab1.photo_label.setGeometry(330, 350, 111, 89)
@@ -175,11 +175,11 @@ class youdwnl_tabs(QWidget):
 
         # pycharm exe
         background_image_path = "C:\Proyectos\phtree\phtree_ydwl\images\\istockphoto-1172479732-170667a.jpg"
-        #icon_image_path = "C:\Proyectos\phtree\phtree_ydwl\images\\totoro.png"
+        # icon_image_path = "C:\Proyectos\phtree\phtree_ydwl\images\\totoro.png"
 
         # Icon
         # self.setWindowIcon(QIcon(icon_image_path))
-        #self.setWindowIcon(QIcon(resource_path(icon_image_path)))
+        # self.setWindowIcon(QIcon(resource_path(icon_image_path)))
 
     def tab2UI(self):
         # Information Search tab 2
@@ -274,14 +274,38 @@ class youdwnl_tabs(QWidget):
         # Search result
         self.tab2.tableWidget = QTableWidget(self.tab2)
         self.tab2.tableWidget.setRowCount(20)
-        self.tab2.tableWidget.setColumnCount(3)
+        self.tab2.tableWidget.setColumnCount(4)
         self.tab2.tableWidget.setGeometry(20, 170, 535, 250)
-        #self.tab2.tableWidget.horizontalHeader().setVisible(False)
+        # self.tab2.tableWidget.horizontalHeader().setVisible(False)
         self.tab2.tableWidget.setHorizontalHeaderLabels(['', 'Title', 'Link'])
-        self.tab2.tableWidget.horizontalHeader().setStyleSheet("QHeaderView::section { border-bottom: 1px solid green; }")
-        self.tab2.tableWidget.verticalHeader().setVisible(False)
-        self.tab2.tableWidget.setShowGrid(False)
-        self.tab2.tableWidget.setVisible(False)
+        self.tab2.tableWidget.horizontalHeader().setStyleSheet(
+            "QHeaderView::section { border-bottom: 1px solid green; }")
+
+        self.tab2.boxpl = QCheckBox("Search playlist", self.tab2)
+
+
+        for i in range(1, 20):
+            self.tab2.tableWidget.setCellWidget(4, 0, self.tab2.boxpl)
+
+        self.tab2.boxpl.stateChanged.connect(self.clickBox)
+
+        '''    
+
+            item = QTableWidgetItem('Text%d' % i)
+
+
+            self.tab2.tableWidget.item.setFlags(QtCore.Qt.ItemIsUserCheckable |
+                          QtCore.Qt.ItemIsEnabled)
+            self.tab2.tableWidget.item.setCheckState(QtCore.Qt.Unchecked)
+            self.tab2.tableWidget.setItem(i, 0, item)
+            #self.tab2.tableWidget.setCellWidget(i, 0, QCheckBox(' ', self.tab2))
+        '''
+
+        #self.tab2.tableWidget.itemClicked.connect(self.tab2.handleItemClicked)
+
+        #self.tab2.tableWidget.verticalHeader().setVisible(False)
+        #self.tab2.tableWidget.setShowGrid(False)
+        #self.tab2.tableWidget.setVisible(False)
 
         # Information
         self.tab2.instructions4 = QLabel(self.tab2)
@@ -299,7 +323,6 @@ class youdwnl_tabs(QWidget):
         # pixmap = QPixmap(resource_path(photo_path))
         self.tab2.photo_label.setPixmap(pixmap)
         self.tab2.photo_label.setGeometry(445, 10, 111, 89)
-
 
     def tab3UI(self):
         # Information
@@ -334,6 +357,13 @@ class youdwnl_tabs(QWidget):
         self.tab2.searchtextbox.setText('')
         self.tab2.textmessage.setText("Ready to download")
 
+    def clickBox(self, state):
+
+        if state == QtCore.Qt.Checked:
+            print('Checked')
+        else:
+            print('Unchecked')
+
     def finished(self):
         self.tab1.textmessage.setText('Data download completed')
         print('Finito')
@@ -347,10 +377,35 @@ class youdwnl_tabs(QWidget):
         self.tab2.textmessage.setText("Ready to download")
         self.tab2.tableWidget.setVisible(False)
 
+    def handleItemClicked(self, item):
+        if item.checkState() == QtCore.Qt.Checked:
+            print('"%s" Checked' % item.text())
+            self._list.append(item.row())
+            print(self._list)
+        else:
+            print('"%s" Clicked' % item.text())
+
+
     def download_search_result(self):
         # Download options: Only Video, Only Music, Video & Music
         dwl_choice = str(self.tab2.combo_choice.currentText())
 
+        print('search:', dwl_choice)
+
+        for i in range(10):
+            # self.tab2.tableWidget.setCellWidget(i, 0, QCheckBox('dwl', self.tab2))
+            dwl_link_val = self.tab2.tableWidget.item(i, 2).text()  # ok
+            dwl_check = 0
+            print(dwl_link_val)
+            # item = self.tab2.tableWidget.item(i, 0)
+            print(self.tab2.tableWidget.item(i, 0))
+            #if self.tab2.tableWidget.item(i, 0) == Qt.Checked:
+            #    dwl_check = 1
+
+            # dwl_related = self.tab1.boxpl.checkState()
+            #print(dwl_check)
+
+        '''
         # Define the thread
         self.dwnl_thread = DownloadData(video_id_list_search,
                                         dwl_choice)  # Any other args, kwargs are passed to the run function
@@ -359,6 +414,7 @@ class youdwnl_tabs(QWidget):
         # Execute the thread
         self.dwnl_thread.start()
         self.tab2.textmessage.setText('Downloading data')
+        '''
 
     def oh_no(self):
         # Link to download
@@ -380,7 +436,6 @@ class youdwnl_tabs(QWidget):
             print('Web site does not exist')
             self.tab1.linktextbox.clear()
             return
-
 
         # id of videos to download
         video_id_list = []
@@ -429,11 +484,11 @@ class youdwnl_tabs(QWidget):
         search_data_formatted = search_data
         single_search = 0
 
-        #video = self.tab2.boxvd.checkState()
+        # video = self.tab2.boxvd.checkState()
 
-        #playlist = self.tab2.boxpl.checkState()
+        # playlist = self.tab2.boxpl.checkState()
 
-        #print(video, playlist)
+        # print(video, playlist)
 
         max_results = 20
 
@@ -446,8 +501,6 @@ class youdwnl_tabs(QWidget):
             single_search = 1
             search_data_formatted = search_data
             print('search 1 = ', search_data_formatted)
-
-
 
         # Single video with list in link
         if 'watch?v=' and '&list' in search_data:
@@ -498,14 +551,15 @@ class youdwnl_tabs(QWidget):
             self.tab2.tableWidget.setRowCount(0)
             self.tab2.tableWidget.setColumnCount(0)
             self.tab2.tableWidget.setRowCount(max_results)
-            self.tab2.tableWidget.setColumnCount(3)
-            # Reagular search
+            self.tab2.tableWidget.setColumnCount(4)
+
+            # Regular search
             i = 0
             for link in search_result_dict:
                 print(link['link'])
 
                 # Load images only for videos and not playlist
-                #if self.tab2.boxvd.checkState() == 2:
+                # if self.tab2.boxvd.checkState() == 2:
                 if chk_playlist == 0:
                     url = link['thumbnails'][0]
                     print(url)
@@ -522,16 +576,16 @@ class youdwnl_tabs(QWidget):
                     pippo = labels_list[i]
                     self.tab2.pippo = QLabel(self.tab2)
                     self.tab2.pippo.setPixmap(pixmap4)
-                    self.tab2.tableWidget.setCellWidget(i, 0, self.tab2.pippo)
+                    self.tab2.tableWidget.setCellWidget(i, 1, self.tab2.pippo)
                     self.tab2.pippo.show()
                 else:
                     # if playlist no photo
                     newitem = QTableWidgetItem('')
-                    self.tab2.tableWidget.setItem(i, 0, newitem)
+                    self.tab2.tableWidget.setItem(i, 1, newitem)
 
-
-                self.tab2.tableWidget.setItem(i, 1, QTableWidgetItem(link['title']))
-                self.tab2.tableWidget.setItem(i, 2, QTableWidgetItem(link['link']))
+                self.tab2.tableWidget.setCellWidget(i, 0, QCheckBox('dwl', self.tab2))
+                self.tab2.tableWidget.setItem(i, 2, QTableWidgetItem(link['title']))
+                self.tab2.tableWidget.setItem(i, 3, QTableWidgetItem(link['link']))
                 self.tab2.tableWidget.resizeColumnsToContents()
 
                 # self.tab2.title.insertPlainText(link['title'] + "\n" + "\n")
@@ -544,7 +598,7 @@ class youdwnl_tabs(QWidget):
             self.tab2.tableWidget.setRowCount(0)
             self.tab2.tableWidget.setColumnCount(0)
             self.tab2.tableWidget.setRowCount(1)
-            self.tab2.tableWidget.setColumnCount(3)
+            self.tab2.tableWidget.setColumnCount(4)
             link = search_result_dict[0]
             print(link['link'])
 
@@ -566,15 +620,16 @@ class youdwnl_tabs(QWidget):
                 pippo = labels_list[0]
                 self.tab2.pippo = QLabel(self.tab2)
                 self.tab2.pippo.setPixmap(pixmap4)
-                self.tab2.tableWidget.setCellWidget(0, 0, self.tab2.pippo)
+                self.tab2.tableWidget.setCellWidget(0, 1, self.tab2.pippo)
                 self.tab2.pippo.show()
             else:
                 # if playlist no photo
                 newitem = QTableWidgetItem('')
-                self.tab2.tableWidget.setItem(0, 0, newitem)
+                self.tab2.tableWidget.setItem(0, 1, newitem)
 
-            self.tab2.tableWidget.setItem(0, 1, QTableWidgetItem(link['title']))
-            self.tab2.tableWidget.setItem(0, 2, QTableWidgetItem(link['link']))
+            self.tab2.tableWidget.setCellWidget(0, 0, QCheckBox('dwl', self.tab2))
+            self.tab2.tableWidget.setItem(0, 2, QTableWidgetItem(link['title']))
+            self.tab2.tableWidget.setItem(0, 3, QTableWidgetItem(link['link']))
             self.tab2.tableWidget.resizeColumnsToContents()
 
             # self.tab2.title.insertPlainText(link['title'] + "\n" + "\n")
@@ -583,7 +638,4 @@ class youdwnl_tabs(QWidget):
 
             print('aqiiiiiiiiiiiii')
 
-
         print('to download: ', video_id_list_search)
-
-
