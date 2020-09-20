@@ -16,6 +16,8 @@ import json
 # Global variables
 SAVE_PATH = os.path.expanduser('~/Downloads')
 
+max_results = 20
+
 ydl_video = {
     'format': 'best',
     'dumpjson': True,
@@ -277,35 +279,26 @@ class youdwnl_tabs(QWidget):
         self.tab2.tableWidget.setColumnCount(4)
         self.tab2.tableWidget.setGeometry(20, 170, 535, 250)
         # self.tab2.tableWidget.horizontalHeader().setVisible(False)
-        self.tab2.tableWidget.setHorizontalHeaderLabels(['', 'Title', 'Link'])
+        self.tab2.tableWidget.setHorizontalHeaderLabels(['', 'Photo', 'Title', 'Link'])
         self.tab2.tableWidget.horizontalHeader().setStyleSheet(
             "QHeaderView::section { border-bottom: 1px solid green; }")
 
-        self.tab2.boxpl = QCheckBox("Search playlist", self.tab2)
+
+        # Create check boxes to be inserted into the table
+        # List of check box
+        check_box_list = []
+        check_box_in_table = ''
+        for i in range(max_results):
+            check_box_list.append('checkbox' + str(i))
+            check_box_in_table = check_box_list[i]
+            self.tab2.check_box_in_table = QCheckBox("dwl", self.tab2)
+            self.tab2.tableWidget.setCellWidget(i, 0, self.tab2.check_box_in_table)
+            self.tab2.check_box_in_table.stateChanged.connect(self.clickBox)
 
 
-        for i in range(1, 20):
-            self.tab2.tableWidget.setCellWidget(4, 0, self.tab2.boxpl)
-
-        self.tab2.boxpl.stateChanged.connect(self.clickBox)
-
-        '''    
-
-            item = QTableWidgetItem('Text%d' % i)
-
-
-            self.tab2.tableWidget.item.setFlags(QtCore.Qt.ItemIsUserCheckable |
-                          QtCore.Qt.ItemIsEnabled)
-            self.tab2.tableWidget.item.setCheckState(QtCore.Qt.Unchecked)
-            self.tab2.tableWidget.setItem(i, 0, item)
-            #self.tab2.tableWidget.setCellWidget(i, 0, QCheckBox(' ', self.tab2))
-        '''
-
-        #self.tab2.tableWidget.itemClicked.connect(self.tab2.handleItemClicked)
-
-        #self.tab2.tableWidget.verticalHeader().setVisible(False)
-        #self.tab2.tableWidget.setShowGrid(False)
-        #self.tab2.tableWidget.setVisible(False)
+        self.tab2.tableWidget.verticalHeader().setVisible(True)
+        self.tab2.tableWidget.setShowGrid(True)
+        self.tab2.tableWidget.setVisible(False)
 
         # Information
         self.tab2.instructions4 = QLabel(self.tab2)
@@ -490,7 +483,7 @@ class youdwnl_tabs(QWidget):
 
         # print(video, playlist)
 
-        max_results = 20
+        #max_results = 20
 
         chk_playlist = 0
 
@@ -520,13 +513,6 @@ class youdwnl_tabs(QWidget):
         else:
             print('search 4 = ', search_data_formatted)
             search = SearchVideos(search_data_formatted, offset=1, mode="json", max_results=max_results)
-
-        '''
-        if self.tab2.boxvd.checkState() == 2:
-            search = SearchVideos(search_data, offset=1, mode="json", max_results=max_results)
-        else:
-            search = SearchPlaylists(search_data, offset=1, mode="json", max_results=max_results)
-        '''
 
         search_data = json.loads(search.result())
 
@@ -583,7 +569,6 @@ class youdwnl_tabs(QWidget):
                     newitem = QTableWidgetItem('')
                     self.tab2.tableWidget.setItem(i, 1, newitem)
 
-                self.tab2.tableWidget.setCellWidget(i, 0, QCheckBox('dwl', self.tab2))
                 self.tab2.tableWidget.setItem(i, 2, QTableWidgetItem(link['title']))
                 self.tab2.tableWidget.setItem(i, 3, QTableWidgetItem(link['link']))
                 self.tab2.tableWidget.resizeColumnsToContents()
