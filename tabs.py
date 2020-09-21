@@ -14,24 +14,8 @@ from youtubesearchpython import SearchVideos, SearchPlaylists
 import json
 
 # Global variables
-SAVE_PATH = os.path.expanduser('~/Downloads')
-
 max_results = 20
-
-ydl_video = {
-    'format': 'best',
-    'dumpjson': True,
-    'ignore-errors': True,
-    'skip-unavailable-fragments': True,
-    'continue': True,
-    'outtmpl': SAVE_PATH + '/_video/%(title)s.%(ext)s',
-}
-
-ydl_audio = {
-    'format': 'bestaudio/best',
-    'outtmpl': SAVE_PATH + '/_audio/%(title)s.%(ext)s',
-}
-
+rows_checked = []
 
 def resource_path(relative_path):
     if hasattr(sys, '_MEIPASS'):
@@ -283,7 +267,7 @@ class youdwnl_tabs(QWidget):
         self.tab2.tableWidget.horizontalHeader().setStyleSheet(
             "QHeaderView::section { border-bottom: 1px solid green; }")
 
-
+        '''
         # Create check boxes to be inserted into the table
         # List of check box
         check_box_list = []
@@ -295,10 +279,11 @@ class youdwnl_tabs(QWidget):
             self.tab2.tableWidget.setCellWidget(i, 0, self.tab2.check_box_in_table)
             self.tab2.check_box_in_table.stateChanged.connect(self.clickBox)
 
-
+        '''
         self.tab2.tableWidget.verticalHeader().setVisible(True)
         self.tab2.tableWidget.setShowGrid(True)
         self.tab2.tableWidget.setVisible(False)
+
 
         # Information
         self.tab2.instructions4 = QLabel(self.tab2)
@@ -352,13 +337,28 @@ class youdwnl_tabs(QWidget):
 
     def clickBox(self, state):
 
+        row = self.tab2.tableWidget.currentRow()
+        print(row)
         if state == QtCore.Qt.Checked:
             print('Checked')
+            rows_checked.append(row)
         else:
             print('Unchecked')
+            rows_checked.remove(row)
+
+    def my_hook(self, d):
+        if d['status'] == 'finished':
+            file_tuple = os.path.split(os.path.abspath(d['filename']))
+            print("Done downloading {}".format(file_tuple[1]))
+        if d['status'] == 'downloading':
+            p = d['_percent_str']
+            p = p.replace('%', '')
+            self.progress.setValue(float(p))
+            print(d['filename'], d['_percent_str'], d['_eta_str'])
+
 
     def finished(self):
-        self.tab1.textmessage.setText('Data download completed')
+        self.tab2.textmessage.setText('Data download completed')
         print('Finito')
 
     def clear_tab1(self):
@@ -370,35 +370,26 @@ class youdwnl_tabs(QWidget):
         self.tab2.textmessage.setText("Ready to download")
         self.tab2.tableWidget.setVisible(False)
 
-    def handleItemClicked(self, item):
-        if item.checkState() == QtCore.Qt.Checked:
-            print('"%s" Checked' % item.text())
-            self._list.append(item.row())
-            print(self._list)
-        else:
-            print('"%s" Clicked' % item.text())
 
 
     def download_search_result(self):
         # Download options: Only Video, Only Music, Video & Music
         dwl_choice = str(self.tab2.combo_choice.currentText())
-
+        check_box_list = []
         print('search:', dwl_choice)
 
-        for i in range(10):
-            # self.tab2.tableWidget.setCellWidget(i, 0, QCheckBox('dwl', self.tab2))
-            dwl_link_val = self.tab2.tableWidget.item(i, 2).text()  # ok
-            dwl_check = 0
-            print(dwl_link_val)
-            # item = self.tab2.tableWidget.item(i, 0)
-            print(self.tab2.tableWidget.item(i, 0))
-            #if self.tab2.tableWidget.item(i, 0) == Qt.Checked:
-            #    dwl_check = 1
+        video_id_list_search = []
 
-            # dwl_related = self.tab1.boxpl.checkState()
-            #print(dwl_check)
+        for i in range(max_results):
+            if i in rows_checked:
+                # self.tab2.tableWidget.setCellWidget(i, 0, QCheckBox('dwl', self.tab2))
+                dwl_link_val = self.tab2.tableWidget.item(i, 3).text()  # ok
+                video_id_list_search.append(dwl_link_val)
 
-        '''
+
+        print(rows_checked)
+        print(video_id_list_search)
+
         # Define the thread
         self.dwnl_thread = DownloadData(video_id_list_search,
                                         dwl_choice)  # Any other args, kwargs are passed to the run function
@@ -407,7 +398,7 @@ class youdwnl_tabs(QWidget):
         # Execute the thread
         self.dwnl_thread.start()
         self.tab2.textmessage.setText('Downloading data')
-        '''
+
 
     def oh_no(self):
         # Link to download
@@ -475,21 +466,14 @@ class youdwnl_tabs(QWidget):
         # Data to search to download
         search_data = self.tab2.searchtextbox.text()
         search_data_formatted = search_data
-        single_search = 0
 
-        # video = self.tab2.boxvd.checkState()
-
-        # playlist = self.tab2.boxpl.checkState()
-
-        # print(video, playlist)
-
-        #max_results = 20
+        single_search = 0 #Free text
 
         chk_playlist = 0
 
         # Format search_data
 
-        # Single video
+        # Single video NO list
         if 'watch?v' in search_data:
             single_search = 1
             search_data_formatted = search_data
@@ -502,6 +486,7 @@ class youdwnl_tabs(QWidget):
             search_data_formatted = search_data[0:result - 1]
             print('search 2 = ', search_data_formatted)
 
+        # Single playlist
         if 'playlist?list=' in search_data:
             chk_playlist = 1
             single_search = 1
@@ -520,9 +505,6 @@ class youdwnl_tabs(QWidget):
 
         print(search_result_dict)
 
-        # id of videos to download
-        global video_id_list_search
-        video_id_list_search = []
 
         # help list of labels
         labels_list = []
@@ -533,11 +515,21 @@ class youdwnl_tabs(QWidget):
 
         self.tab2.tableWidget.setVisible(True)
 
+        # Search free text
         if single_search == 0:
             self.tab2.tableWidget.setRowCount(0)
             self.tab2.tableWidget.setColumnCount(0)
             self.tab2.tableWidget.setRowCount(max_results)
             self.tab2.tableWidget.setColumnCount(4)
+            check_box_list = []
+            check_box_in_table = ''
+            for i in range(max_results):
+                check_box_list.append('checkbox' + str(i))
+                check_box_in_table = check_box_list[i]
+                self.tab2.check_box_in_table = QCheckBox("dwl", self.tab2)
+                self.tab2.tableWidget.setCellWidget(i, 0, self.tab2.check_box_in_table)
+                self.tab2.check_box_in_table.stateChanged.connect(self.clickBox)
+
 
             # Regular search
             i = 0
@@ -573,11 +565,7 @@ class youdwnl_tabs(QWidget):
                 self.tab2.tableWidget.setItem(i, 3, QTableWidgetItem(link['link']))
                 self.tab2.tableWidget.resizeColumnsToContents()
 
-                # self.tab2.title.insertPlainText(link['title'] + "\n" + "\n")
-                # self.tab2.title.insertPlainText(link['link'] + "\n" + "\n")
-                video_id_list_search.append(link['link'])
-
-                i = i + 1
+                i += 1
 
         else:
             self.tab2.tableWidget.setRowCount(0)
@@ -612,15 +600,13 @@ class youdwnl_tabs(QWidget):
                 newitem = QTableWidgetItem('')
                 self.tab2.tableWidget.setItem(0, 1, newitem)
 
-            self.tab2.tableWidget.setCellWidget(0, 0, QCheckBox('dwl', self.tab2))
+            check_box_in_table = 'checkbox1'
+            self.tab2.check_box_in_table = QCheckBox("dwl", self.tab2)
+            self.tab2.tableWidget.setCellWidget(0, 0, self.tab2.check_box_in_table)
+            self.tab2.check_box_in_table.stateChanged.connect(self.clickBox)
+
+
             self.tab2.tableWidget.setItem(0, 2, QTableWidgetItem(link['title']))
             self.tab2.tableWidget.setItem(0, 3, QTableWidgetItem(link['link']))
             self.tab2.tableWidget.resizeColumnsToContents()
 
-            # self.tab2.title.insertPlainText(link['title'] + "\n" + "\n")
-            # self.tab2.title.insertPlainText(link['link'] + "\n" + "\n")
-            video_id_list_search.append(link['link'])
-
-            print('aqiiiiiiiiiiiii')
-
-        print('to download: ', video_id_list_search)
