@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QPixmap
-from run_trheads import DownloadData
+from run_trheads import DownloadData, Progressbar
 
 from youtubesearchpython import SearchVideos, SearchPlaylists
 import json
@@ -239,7 +239,7 @@ class youdwnl_tabs(QWidget):
         # self.dwl.move(90, 125)
         self.tab2.dwl.clicked.connect(self.download_search_result)
 
-        # Create clear button
+        # Clear button
         self.tab2.cls = QPushButton('Clear data', self.tab2)
         self.tab2.cls.setToolTip('Click here to claer the data')
         self.tab2.cls.setFont(QtGui.QFont('Arial', 9))
@@ -256,6 +256,12 @@ class youdwnl_tabs(QWidget):
         self.tab2.textmessage.setStyleSheet('color: black')
         self.tab2.textmessage.setText("Ready to download")
         self.tab2.textmessage.setGeometry(390, 130, 300, 15)
+
+        # Progress bar
+        self.tab2.pbar = QProgressBar(self.tab2)
+        self.tab2.pbar.setGeometry(195, 95, 300, 15)
+        self.tab2.pbar.setValue(0)
+
 
         # Search result
         self.tab2.tableWidget = QTableWidget(self.tab2)
@@ -346,16 +352,6 @@ class youdwnl_tabs(QWidget):
             print('Unchecked')
             rows_checked.remove(row)
 
-    def my_hook(self, d):
-        if d['status'] == 'finished':
-            file_tuple = os.path.split(os.path.abspath(d['filename']))
-            print("Done downloading {}".format(file_tuple[1]))
-        if d['status'] == 'downloading':
-            p = d['_percent_str']
-            p = p.replace('%', '')
-            self.progress.setValue(float(p))
-            print(d['filename'], d['_percent_str'], d['_eta_str'])
-
 
     def finished(self):
         self.tab2.textmessage.setText('Data download completed')
@@ -390,14 +386,23 @@ class youdwnl_tabs(QWidget):
         print(rows_checked)
         print(video_id_list_search)
 
-        # Define the thread
+        # Define the thread for downloading
         self.dwnl_thread = DownloadData(video_id_list_search,
                                         dwl_choice)  # Any other args, kwargs are passed to the run function
         self.dwnl_thread.signal.connect(self.finished)
 
-        # Execute the thread
+        # Define the thread for progressbar
+        self.progressbar_thread = Progressbar()
+
+        # Execute the threads
         self.dwnl_thread.start()
+        self.progressbar_thread.start()
+        self.progressbar_thread.signal_prgb.connect(self.setProgressVal)
+
         self.tab2.textmessage.setText('Downloading data')
+
+    def setProgressVal(self, val):
+        self.tab2.pbar.setValue(val)
 
 
     def oh_no(self):

@@ -2,20 +2,33 @@ from PyQt5.QtCore import pyqtSignal, QThread
 import youtube_dl
 import os, sys
 import re
+import time
 
 # Global variables
 SAVE_PATH = os.path.expanduser('~/Downloads')
 
+def my_hook(d):
+    print('hjhjhjhjh')
+    if d['status'] == 'finished':
+        file_tuple = os.path.split(os.path.abspath(d['filename']))
+        print("Done downloading {}".format(file_tuple[1]))
+    if d['status'] == 'downloading':
+        print(d['filename'], d['_percent_str'], d['_eta_str'])
+
+
 ydl_video = {
     'format': 'best',
     'dumpjson': True,
+    #'progress_hooks': [my_hook],
     'outtmpl': SAVE_PATH + '/_video/%(title)s.%(ext)s',
 }
 
 ydl_audio = {
     'format': 'bestaudio/best',
+    'progress_hooks': [my_hook],
     'outtmpl': SAVE_PATH + '/_audio/%(title)s.%(ext)s',
 }
+
 
 def resource_path(relative_path):
     if hasattr(sys, '_MEIPASS'):
@@ -81,6 +94,9 @@ class DownloadData(QThread):
                 print('old ', filename_old)
                 print('new ', filename_new)
                 # pycharm exe
+                #os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
+                #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
+
                 os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
                           ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
@@ -141,5 +157,20 @@ class DownloadData(QThread):
         self.signal.emit('Holaaaaaaa')
 
 
+class Progressbar(QThread):
+    signal_prgb = pyqtSignal(int)
+
+    def __init__(self, parent=None):
+        super(Progressbar, self).__init__(parent)
+
+
+    def run(self):
+        # Fill progress bar
+        cnt = 0
+        while cnt <= 100:
+            cnt += 1
+            time.sleep(0.3)
+
+            self.signal_prgb.emit(cnt)
 
 
