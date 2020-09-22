@@ -7,19 +7,29 @@ import time
 # Global variables
 SAVE_PATH = os.path.expanduser('~/Downloads')
 
+count_percent = 0
+
 def my_hook(d):
+    global count_percent
     print('hjhjhjhjh')
     if d['status'] == 'finished':
         file_tuple = os.path.split(os.path.abspath(d['filename']))
-        print("Done downloading {}".format(file_tuple[1]))
+        print("Moooooooons Done downloading {}".format(file_tuple[1]))
+        count_percent = 0
     if d['status'] == 'downloading':
-        print(d['filename'], d['_percent_str'], d['_eta_str'])
+        #print('111111', d['filename'])
+        #count_percent = d['filename']
+        #print('2222222', d['_percent_str'])
+        #print('dddddddddddd', d['_eta_str'])
+        print(d['_percent_str'])
+        count_percent = int(d['_percent_str'][0:3])
+        print('aquii count', count_percent)
 
 
 ydl_video = {
     'format': 'best',
     'dumpjson': True,
-    #'progress_hooks': [my_hook],
+    'progress_hooks': [my_hook],
     'outtmpl': SAVE_PATH + '/_video/%(title)s.%(ext)s',
 }
 
@@ -160,17 +170,23 @@ class DownloadData(QThread):
 class Progressbar(QThread):
     signal_prgb = pyqtSignal(int)
 
+    signal_end = pyqtSignal('PyQt_PyObject')
+
     def __init__(self, parent=None):
         super(Progressbar, self).__init__(parent)
 
 
     def run(self):
         # Fill progress bar
+        global count_percent
         cnt = 0
-        while cnt <= 100:
-            cnt += 1
-            time.sleep(0.3)
+        while cnt < 98:
+            cnt = count_percent
+            time.sleep(2)
+            print('count111111', count_percent)
+            self.signal_prgb.emit(count_percent)
 
-            self.signal_prgb.emit(cnt)
+        time.sleep(1)
+        self.signal_end.emit('Holaaaffffaaaa')
 
 

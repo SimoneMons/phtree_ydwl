@@ -357,6 +357,11 @@ class youdwnl_tabs(QWidget):
         self.tab2.textmessage.setText('Data download completed')
         print('Finito')
 
+    def finished_prgb(self):
+        self.tab2.textmessage.setText('Creating mp3 files')
+        print('Creating MP3 files')
+
+
     def clear_tab1(self):
         self.tab1.linktextbox.setText('')
         self.tab1.boxpl.setChecked(False)
@@ -393,6 +398,7 @@ class youdwnl_tabs(QWidget):
 
         # Define the thread for progressbar
         self.progressbar_thread = Progressbar()
+        self.progressbar_thread.signal_end.connect(self.finished_prgb)
 
         # Execute the threads
         self.dwnl_thread.start()
@@ -401,71 +407,10 @@ class youdwnl_tabs(QWidget):
 
         self.tab2.textmessage.setText('Downloading data')
 
+
     def setProgressVal(self, val):
         self.tab2.pbar.setValue(val)
 
-
-    def oh_no(self):
-        # Link to download
-        dwl_ini_link = self.tab1.linktextbox.text()
-
-        # Download options: Only Video, Only Music, Video & Music
-        dwl_choice = str(self.tab1.combo_choice.currentText())
-
-        # Related files of a list
-        dwl_related = self.tab1.boxpl.checkState()
-
-        print(dwl_ini_link, '\n', dwl_related, '\n', dwl_choice)
-
-        # Validate the link
-        try:
-            request = requests.get(dwl_ini_link)
-            print('Web site exists')
-        except:
-            print('Web site does not exist')
-            self.tab1.linktextbox.clear()
-            return
-
-        # id of videos to download
-        video_id_list = []
-
-        if 'playlist' in dwl_ini_link:
-            video_id_list.append(dwl_ini_link)
-            print('It is a playlist')
-
-        # validate if the link is a list of videos
-        elif 'watch?v=' and '&list' in dwl_ini_link:
-            if dwl_related == 2:
-                # Related videos to download
-                r = requests.get(dwl_ini_link)
-                page_source = r.text
-                for m in re.finditer('":{"url":"/watch?', page_source):
-                    video_id = page_source[m.start() + 19:m.end() + 90]
-                    print('videossssss', video_id)
-                    if 'index=' in video_id:
-                        video_id = video_id.split('\\')[0]
-                        if 'https://www.youtube.com/watch?v=' + video_id not in video_id_list:
-                            video_id_list.append('https://www.youtube.com/watch?v=' + video_id)
-            elif dwl_related == 0:
-                # Format link to download
-                result = dwl_ini_link.find('list')
-                # print('link result', result)
-                dwl_end_link = dwl_ini_link[0:result - 1]
-                print('linkkk0 ', dwl_end_link)
-                video_id_list.append(dwl_end_link)
-        else:
-            video_id_list.append(dwl_ini_link)
-
-        print(video_id_list)
-
-        # Define the thread
-        self.dwnl_thread = DownloadData(video_id_list,
-                                        dwl_choice)  # Any other args, kwargs are passed to the run function
-        self.dwnl_thread.signal.connect(self.finished)
-
-        # Execute the thread
-        self.dwnl_thread.start()
-        self.tab1.textmessage.setText('Downloading data')
 
     def oh_no_search(self):
         # Data to search to download
