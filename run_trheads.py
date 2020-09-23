@@ -8,19 +8,34 @@ import time
 SAVE_PATH = os.path.expanduser('~/Downloads')
 
 count_percent = 0
+number_of_downloads = 0
+
+number_of_downloads_ended = 0
+
 
 def my_hook(d):
     global count_percent
+    global number_of_downloads_ended
+
     print('hjhjhjhjh')
     if d['status'] == 'finished':
         file_tuple = os.path.split(os.path.abspath(d['filename']))
         print("Moooooooons Done downloading {}".format(file_tuple[1]))
-        count_percent = 0
+        print('total dln:', number_of_downloads)
+
+        number_of_downloads_ended += 1
+        print('ended:', number_of_downloads_ended)
+
+        if number_of_downloads_ended < number_of_downloads:
+            count_percent = 0
+        else:
+            count_percent = 100
+
     if d['status'] == 'downloading':
-        #print('111111', d['filename'])
-        #count_percent = d['filename']
-        #print('2222222', d['_percent_str'])
-        #print('dddddddddddd', d['_eta_str'])
+        # print('111111', d['filename'])
+        # count_percent = d['filename']
+        # print('2222222', d['_percent_str'])
+        # print('dddddddddddd', d['_eta_str'])
         print(d['_percent_str'])
         count_percent = int(d['_percent_str'][0:3])
         print('aquii count', count_percent)
@@ -46,6 +61,7 @@ def resource_path(relative_path):
         return os.path.join(sys._MEIPASS, relative_path)
     return os.path.join(os.path.abspath("venv"), relative_path)
 
+
 class DownloadData(QThread):
     signal = pyqtSignal('PyQt_PyObject')
 
@@ -54,12 +70,14 @@ class DownloadData(QThread):
         self.video_id_list = video_id_list
         self.dwl_choice = dwl_choice
 
+        global number_of_downloads
+        number_of_downloads = len(self.video_id_list)
+
     def run(self):
         # Download videos
 
         # .exe
-        #ffmpeg_path = "./ffmpeg/ffmpeg.exe"
-
+        # ffmpeg_path = "./ffmpeg/ffmpeg.exe"
 
         # pycharm exe
         ffmpeg_path = ".\\ffmpeg\\ffmpeg.exe"
@@ -80,7 +98,7 @@ class DownloadData(QThread):
 
         # Only music
         if self.dwl_choice == 'Only Music':
-            #self.l.setText("Downloading Music")
+            # self.l.setText("Downloading Music")
             with youtube_dl.YoutubeDL(ydl_audio) as ydlaudio:
                 for id_video in self.video_id_list:
                     ydlaudio.download([id_video])
@@ -89,7 +107,7 @@ class DownloadData(QThread):
             arr_webm = [x for x in os.listdir(audio_path) if x.endswith(".webm") or x.endswith(".m4a")]
             print(arr_webm)
 
-            #self.tab1.textmessage.setText('Creating MP3 files')
+            # self.tab1.textmessage.setText('Creating MP3 files')
 
             for file in arr_webm:
                 filename_old = file
@@ -104,33 +122,33 @@ class DownloadData(QThread):
                 print('old ', filename_old)
                 print('new ', filename_new)
                 # pycharm exe
-                #os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
+                # os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
                 #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
                 os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
                           ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
                 # exe
-                #os.system(resource_path(ffmpeg_path) + ' -i ' + audio_path + '\\' + filename_new +
+                # os.system(resource_path(ffmpeg_path) + ' -i ' + audio_path + '\\' + filename_new +
                 #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
                 os.remove(audio_path + '\\' + filename_new)
 
         # Only video
         elif self.dwl_choice == 'Only Video':
-            #self.tab1.textmessage.setText('Downloading Videos')
+            # self.tab1.textmessage.setText('Downloading Videos')
             with youtube_dl.YoutubeDL(ydl_video) as ydlvideo:
                 for id_video in self.video_id_list:
                     ydlvideo.download([id_video])
 
         else:
-            #self.tab1.textmessage.setText('Downloading Videos')
+            # self.tab1.textmessage.setText('Downloading Videos')
             with youtube_dl.YoutubeDL(ydl_video) as ydlvideo:
                 for id_video in self.video_id_list:
                     ydlvideo.download([id_video])
 
             # Create audio files
-            #self.tab1.textmessage.setText('Creating MP3 files')
+            # self.tab1.textmessage.setText('Creating MP3 files')
 
             for file in os.listdir(video_path):
                 if file.endswith(".mp4"):
@@ -160,7 +178,7 @@ class DownloadData(QThread):
                                   ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + resource_path(audio_path + audio_name))
 
                     # .exe
-                    #if filename_new_mp3 not in os.listdir(audio_path):
+                    # if filename_new_mp3 not in os.listdir(audio_path):
                     #    os.system(resource_path(ffmpeg_path) + ' -i ' + resource_path(video_path + video_name) +
                     #              ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + resource_path(audio_path + audio_name))
 
@@ -175,10 +193,10 @@ class Progressbar(QThread):
     def __init__(self, parent=None):
         super(Progressbar, self).__init__(parent)
 
-
     def run(self):
         # Fill progress bar
         global count_percent
+
         cnt = 0
         while cnt < 98:
             cnt = count_percent
@@ -187,6 +205,5 @@ class Progressbar(QThread):
             self.signal_prgb.emit(count_percent)
 
         time.sleep(1)
+
         self.signal_end.emit('Holaaaffffaaaa')
-
-

@@ -504,7 +504,7 @@ class youdwnl_tabs(QWidget):
                     pippo = labels_list[i]
                     self.tab2.pippo = QLabel(self.tab2)
                     self.tab2.pippo.setPixmap(pixmap4)
-                    self.tab2.tableWidget.setCellWidget(i, 1, self.tab2.pippo)
+                    #self.tab2.tableWidget.setCellWidget(i, 1, self.tab2.pippo)
                     self.tab2.pippo.show()
                 else:
                     # if playlist no photo
