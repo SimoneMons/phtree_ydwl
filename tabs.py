@@ -46,128 +46,8 @@ class youdwnl_tabs(QWidget):
         self.tab2UI()
         self.tab3UI()
 
-    def tab1UI(self):
-        # Create first tab
-        self.tab1.layout = QVBoxLayout(self)
-        self.tab1.setLayout(self.tab1.layout)
-        # self.tab1.setStyleSheet("background-image: url(./images/captura.png)")
-
-        # Information tab 1
-        self.tab1.label = QLabel(self.tab1)
-        self.tab1.label.setStyleSheet('color: black')
-        self.tab1.label.setFont(QtGui.QFont('Arial', 10))
-        self.tab1.label.setText("Insert Video Link or Playlist to download")
-        self.tab1.label.setGeometry(50, 20, 300, 20)
-
-        # Download link tab 1
-        self.tab1.linktextbox = QLineEdit(self.tab1)
-        self.tab1.linktextbox.move(50, 45)
-        self.tab1.linktextbox.resize(320, 20)
-        self.tab1.linktextbox.returnPressed.connect(self.oh_no)
-
-        # check box playlist
-        self.tab1.boxpl = QCheckBox("Download related videos in the list", self.tab1)
-        # self.box.stateChanged.connect(self.clickBox)
-        self.tab1.boxpl.move(220, 70)
-        self.tab1.boxpl.resize(320, 40)
-
-        # Combo choice
-        self.tab1.combo_choice = QComboBox(self.tab1)
-        self.tab1.combo_choice.addItem("Video & Music")
-        self.tab1.combo_choice.addItem("Only Music")
-        self.tab1.combo_choice.addItem("Only Video")
-        # self.tab1.combo_choice.setStyleSheet("QComboBox"
-        #                                "{"
-        #                                "background-color: white;"
-        #                                "}")
-        self.tab1.combo_choice.move(85, 80)
-        self.tab1.combo_choice.resize(100, 20)
-
-        # Download button
-        self.tab1.dwl = QPushButton('Download', self.tab1)
-        self.tab1.dwl.setToolTip('Click here to download your video')
-        self.tab1.dwl.setFont(QtGui.QFont('Arial', 9))
-        # self.tab1.dwl.setStyleSheet("QPushButton"
-        #                       "{"
-        #                       "background-color: #C0C0C0; border-radius: 10px;"
-        #                       "}")
-        self.tab1.dwl.setGeometry(90, 125, 100, 25)
-        # self.dwl.move(90, 125)
-        self.tab1.dwl.clicked.connect(self.oh_no)
-
-        # Create clear button
-        self.tab1.cls = QPushButton('Clear data', self.tab1)
-        self.tab1.cls.setToolTip('Click here to claer the data')
-        self.tab1.cls.setFont(QtGui.QFont('Arial', 9))
-        self.tab1.cls.setGeometry(210, 125, 100, 25)
-        # self.tab1.cls.setStyleSheet("QPushButton"
-        #                       "{"
-        #                       "background-color: #C0C0C0; border-radius: 10px;"
-        #                       "}")
-        # self.cls.move(210, 125)
-        self.tab1.cls.clicked.connect(self.clear_tab1)
-
-        # Message text
-        self.tab1.textmessage = QLabel(self.tab1)
-        self.tab1.textmessage.setStyleSheet('color: black')
-        self.tab1.textmessage.setText("Ready to download")
-        self.tab1.textmessage.setGeometry(340, 130, 300, 15)
-
-        # Information
-        self.tab1.instructions1 = QLabel(self.tab1)
-        self.tab1.instructions1.setStyleSheet('color: black')
-        self.tab1.instructions1.setText("Check your files in:")
-        self.tab1.instructions1.setFont(QtGui.QFont('Arial', 10))
-        self.tab1.instructions1.setGeometry(30, 210, 300, 20)
-
-        # Information
-        self.tab1.instructions2 = QLabel(self.tab1)
-        self.tab1.instructions2.setStyleSheet('color: black')
-        self.tab1.instructions2.setFont(QtGui.QFont('Arial', 10))
-        self.tab1.instructions2.setText("\Downloads\_video (MP4)")
-        self.tab1.instructions2.setGeometry(30, 240, 300, 20)
-
-        # Information
-        self.tab1.instructions3 = QLabel(self.tab1)
-        self.tab1.instructions3.setStyleSheet('color: black')
-        self.tab1.instructions3.setFont(QtGui.QFont('Arial', 10))
-        self.tab1.instructions3.setText("\Downloads\_audio (MP3)")
-        self.tab1.instructions3.setGeometry(30, 270, 300, 20)
-
-        # Information
-        self.tab1.instructions4 = QLabel(self.tab1)
-        self.tab1.instructions4.setStyleSheet('color: black')
-        self.tab1.instructions4.setFont(QtGui.QFont('Arial', 7))
-        self.tab1.instructions4.setText("Enjoy, by Mons 2020")
-        self.tab1.instructions4.setGeometry(445, 425, 300, 20)
-
-        # photo
-        self.tab1.photo_label = QLabel(self.tab1)
-
-        photo_path = './images/Captura.png'
-
-        # Pycharm
-        pixmap = QPixmap(photo_path)
-
-        # Exe
-        # pixmap = QPixmap(resource_path(photo_path))
-
-        self.tab1.photo_label.setPixmap(pixmap)
-        self.tab1.photo_label.setGeometry(330, 350, 111, 89)
-
-        # .exe
-        # background_image_path = "./images/istockphoto-1172479732-170667a.jpg"
-        # icon_image_path = "./images/totoro.png"
-
-        # pycharm exe
-        background_image_path = "C:\Proyectos\phtree\phtree_ydwl\images\\istockphoto-1172479732-170667a.jpg"
-        # icon_image_path = "C:\Proyectos\phtree\phtree_ydwl\images\\totoro.png"
-
-        # Icon
-        # self.setWindowIcon(QIcon(icon_image_path))
-        # self.setWindowIcon(QIcon(resource_path(icon_image_path)))
-
     def tab2UI(self):
+
         # Information Search tab 2
         self.tab2.label = QLabel(self.tab2)
         self.tab2.label.setStyleSheet('color: black')
@@ -177,22 +57,22 @@ class youdwnl_tabs(QWidget):
 
         # Search tab 2
         self.tab2.searchtextbox = QLineEdit(self.tab2)
-        self.tab2.searchtextbox.move(50, 45)
-        self.tab2.searchtextbox.resize(320, 20)
+        self.tab2.searchtextbox.setGeometry(50, 45, 330, 20)
         self.tab2.searchtextbox.returnPressed.connect(self.oh_no_search)
 
+
         # Combo choice
+
         self.tab2.combo_choice = QComboBox(self.tab2)
-        self.tab2.combo_choice.addItem("Video & Music")
         self.tab2.combo_choice.addItem("Only Music")
         self.tab2.combo_choice.addItem("Only Video")
+        self.tab2.combo_choice.addItem("Video & Music")
         # self.tab1.combo_choice.setStyleSheet("QComboBox"
         #                                "{"
         #                                "background-color: white;"
         #                                "}")
-        self.tab2.combo_choice.move(85, 80)
-        self.tab2.combo_choice.resize(100, 20)
-
+        self.tab2.combo_choice.move(1045, 200)
+        self.tab2.combo_choice.resize(100, 25)
         self._toggle = True
 
         '''
@@ -214,18 +94,28 @@ class youdwnl_tabs(QWidget):
         self.tab2.boxpl.move(320, 70)
         self.tab2.boxpl.resize(320, 40)
         '''
-
         # Search button
-        self.tab2.dwl = QPushButton('Search', self.tab2)
-        self.tab2.dwl.setToolTip('Click here to search your music and videos')
-        self.tab2.dwl.setFont(QtGui.QFont('Arial', 9))
+        self.tab2.search_button = QPushButton('Search', self.tab2)
+        self.tab2.search_button.setToolTip('Click here to search your music and videos')
+        self.tab2.search_button.setFont(QtGui.QFont('Arial', 10))
         # self.tab1.dwl.setStyleSheet("QPushButton"
         #                       "{"
         #                       "background-color: #C0C0C0; border-radius: 10px;"
         #                       "}")
-        self.tab2.dwl.setGeometry(50, 125, 100, 25)
-        # self.dwl.move(90, 125)
-        self.tab2.dwl.clicked.connect(self.oh_no_search)
+        self.tab2.search_button.setGeometry(75, 85, 100, 25)
+        self.tab2.search_button.clicked.connect(self.oh_no_search)
+
+
+        # Clear button
+        self.tab2.cls = QPushButton('Clear data', self.tab2)
+        self.tab2.cls.setToolTip('Click here to clear the data')
+        self.tab2.cls.setFont(QtGui.QFont('Arial', 9))
+        self.tab2.cls.setGeometry(200, 85, 100, 25)
+        # self.tab1.cls.setStyleSheet("QPushButton"
+        #                       "{"
+        #                       "background-color: #C0C0C0; border-radius: 10px;"
+        #                       "}")
+        self.tab2.cls.clicked.connect(self.clear_tab2)
 
         # Download button
         self.tab2.dwl = QPushButton('Download', self.tab2)
@@ -235,31 +125,19 @@ class youdwnl_tabs(QWidget):
         #                       "{"
         #                       "background-color: #C0C0C0; border-radius: 10px;"
         #                       "}")
-        self.tab2.dwl.setGeometry(160, 125, 100, 25)
-        # self.dwl.move(90, 125)
+        self.tab2.dwl.setGeometry(1045, 250, 100, 25)
         self.tab2.dwl.clicked.connect(self.download_search_result)
-
-        # Clear button
-        self.tab2.cls = QPushButton('Clear data', self.tab2)
-        self.tab2.cls.setToolTip('Click here to claer the data')
-        self.tab2.cls.setFont(QtGui.QFont('Arial', 9))
-        self.tab2.cls.setGeometry(270, 125, 100, 25)
-        # self.tab1.cls.setStyleSheet("QPushButton"
-        #                       "{"
-        #                       "background-color: #C0C0C0; border-radius: 10px;"
-        #                       "}")
-        # self.cls.move(210, 125)
-        self.tab2.cls.clicked.connect(self.clear_tab2)
 
         # Message text
         self.tab2.textmessage = QLabel(self.tab2)
         self.tab2.textmessage.setStyleSheet('color: black')
         self.tab2.textmessage.setText("Ready to download")
-        self.tab2.textmessage.setGeometry(390, 130, 300, 15)
+        self.tab2.textmessage.setFont(QtGui.QFont('Arial', 10))
+        self.tab2.textmessage.setGeometry(710, 598, 300, 20)
 
         # Progress bar
         self.tab2.pbar = QProgressBar(self.tab2)
-        self.tab2.pbar.setGeometry(195, 95, 300, 15)
+        self.tab2.pbar.setGeometry(300, 600, 390, 15)
         self.tab2.pbar.setValue(0)
 
 
@@ -267,28 +145,15 @@ class youdwnl_tabs(QWidget):
         self.tab2.tableWidget = QTableWidget(self.tab2)
         self.tab2.tableWidget.setRowCount(20)
         self.tab2.tableWidget.setColumnCount(4)
-        self.tab2.tableWidget.setGeometry(20, 170, 535, 250)
-        # self.tab2.tableWidget.horizontalHeader().setVisible(False)
+        self.tab2.tableWidget.setGeometry(20, 150, 1010, 430)
         self.tab2.tableWidget.setHorizontalHeaderLabels(['', 'Photo', 'Title', 'Link'])
         self.tab2.tableWidget.horizontalHeader().setStyleSheet(
             "QHeaderView::section { border-bottom: 1px solid green; }")
-
-        '''
-        # Create check boxes to be inserted into the table
-        # List of check box
-        check_box_list = []
-        check_box_in_table = ''
-        for i in range(max_results):
-            check_box_list.append('checkbox' + str(i))
-            check_box_in_table = check_box_list[i]
-            self.tab2.check_box_in_table = QCheckBox("dwl", self.tab2)
-            self.tab2.tableWidget.setCellWidget(i, 0, self.tab2.check_box_in_table)
-            self.tab2.check_box_in_table.stateChanged.connect(self.clickBox)
-
-        '''
+        self.tab2.tableWidget.verticalHeader().setDefaultSectionSize(120)
         self.tab2.tableWidget.verticalHeader().setVisible(True)
+        self.tab2.tableWidget.horizontalHeader().setVisible(False)
         self.tab2.tableWidget.setShowGrid(True)
-        self.tab2.tableWidget.setVisible(False)
+        #self.tab2.tableWidget.setVisible(False)
 
 
         # Information
@@ -296,7 +161,7 @@ class youdwnl_tabs(QWidget):
         self.tab2.instructions4.setStyleSheet('color: black')
         self.tab2.instructions4.setFont(QtGui.QFont('Arial', 7))
         self.tab2.instructions4.setText("Enjoy, by Mons 2020")
-        self.tab2.instructions4.setGeometry(20, 430, 300, 20)
+        self.tab2.instructions4.setGeometry(1045, 625, 300, 20)
 
         # photo
         self.tab2.photo_label = QLabel(self.tab2)
@@ -306,7 +171,7 @@ class youdwnl_tabs(QWidget):
         # Exe
         # pixmap = QPixmap(resource_path(photo_path))
         self.tab2.photo_label.setPixmap(pixmap)
-        self.tab2.photo_label.setGeometry(445, 10, 111, 89)
+        self.tab2.photo_label.setGeometry(1035, 10, 111, 89)
 
     def tab3UI(self):
         # Information
@@ -415,6 +280,13 @@ class youdwnl_tabs(QWidget):
     def oh_no_search(self):
         # Data to search to download
         search_data = self.tab2.searchtextbox.text()
+
+        print('oooooooooooooo', search_data)
+        if search_data == '':
+            self.tab2.textmessage.setText("Fill the search field")
+            return 0
+
+
         search_data_formatted = search_data
 
         single_search = 0 #Free text
@@ -499,12 +371,12 @@ class youdwnl_tabs(QWidget):
                     # loading image
                     self.pixmap = QPixmap(image)
 
-                    pixmap4 = self.pixmap.scaled(70, 100, QtCore.Qt.KeepAspectRatio)
+                    pixmap4 = self.pixmap.scaled(120, 90, QtCore.Qt.KeepAspectRatio)
 
                     pippo = labels_list[i]
                     self.tab2.pippo = QLabel(self.tab2)
                     self.tab2.pippo.setPixmap(pixmap4)
-                    #self.tab2.tableWidget.setCellWidget(i, 1, self.tab2.pippo)
+                    self.tab2.tableWidget.setCellWidget(i, 1, self.tab2.pippo)
                     self.tab2.pippo.show()
                 else:
                     # if playlist no photo
@@ -538,7 +410,7 @@ class youdwnl_tabs(QWidget):
                 # loading image
                 self.pixmap = QPixmap(image)
 
-                pixmap4 = self.pixmap.scaled(70, 100, QtCore.Qt.KeepAspectRatio)
+                pixmap4 = self.pixmap.scaled(120, 90, QtCore.Qt.KeepAspectRatio)
 
                 pippo = labels_list[0]
                 self.tab2.pippo = QLabel(self.tab2)

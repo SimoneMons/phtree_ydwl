@@ -8,8 +8,9 @@ class App(QMainWindow):
     def __init__(self):
         super().__init__()
         # window size and Title
-        self.setFixedSize(600, 500)
-        self.setWindowTitle('YouDwl')
+        #self.setFixedSize(1200, 700)
+        self.setGeometry(200, 200, 1185, 700)
+        self.setWindowTitle('Yuhook')
 
         self.table_widget = youdwnl_tabs(self)
         self.setCentralWidget(self.table_widget)
