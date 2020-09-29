@@ -41,6 +41,8 @@ pyinstaller --console --onefile --paths C:\Proyectos\phtree\phtree_ydwl\venv\Lib
 
 pyinstaller --console --onefile --icon=totoro1.ico --paths C:\Proyectos\phtree\phtree_ydwl\venv\Lib\site-packages -F --add-data "./ffmpeg/*;./ffmpeg/" -F --add-data "./images/*;./images/" main_youdwnl.py --name ydwl
 
+pyinstaller --onefile --icon=totoro1.ico --paths C:\Proyectos\phtree\phtree_ydwl\venv\Lib\site-packages -F --add-data "./ffmpeg/*;./ffmpeg/" -F --add-data "./images/*;./images/" main_youdwnl.py --name yuhook
+
 
 --windowed --icon=app.ico
 

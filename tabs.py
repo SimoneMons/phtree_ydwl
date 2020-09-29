@@ -16,6 +16,7 @@ import json
 # Global variables
 max_results = 20
 rows_checked = []
+download_type = ''
 
 def resource_path(relative_path):
     if hasattr(sys, '_MEIPASS'):
@@ -143,15 +144,15 @@ class youdwnl_tabs(QWidget):
 
         # Search result
         self.tab2.tableWidget = QTableWidget(self.tab2)
-        self.tab2.tableWidget.setRowCount(20)
-        self.tab2.tableWidget.setColumnCount(4)
+        self.tab2.tableWidget.setRowCount(max_results)
+        self.tab2.tableWidget.setColumnCount(6)
         self.tab2.tableWidget.setGeometry(20, 150, 1010, 430)
-        self.tab2.tableWidget.setHorizontalHeaderLabels(['', 'Photo', 'Title', 'Link'])
+        self.tab2.tableWidget.setHorizontalHeaderLabels(['Check', 'Photo', 'Title', 'Link', 'Duration', 'Views'])
         self.tab2.tableWidget.horizontalHeader().setStyleSheet(
             "QHeaderView::section { border-bottom: 1px solid green; }")
         self.tab2.tableWidget.verticalHeader().setDefaultSectionSize(120)
         self.tab2.tableWidget.verticalHeader().setVisible(True)
-        self.tab2.tableWidget.horizontalHeader().setVisible(False)
+        self.tab2.tableWidget.horizontalHeader().setVisible(True)
         self.tab2.tableWidget.setShowGrid(True)
         #self.tab2.tableWidget.setVisible(False)
 
@@ -176,22 +177,49 @@ class youdwnl_tabs(QWidget):
     def tab3UI(self):
         # Information
         self.tab3.info = QPlainTextEdit(self.tab3)
-        self.tab3.info.setGeometry(30, 40, 515, 350)
-        self.tab3.info.insertPlainText('Download videos and music from Youtube' + "\n" + "\n" + "\n")
-        self.tab3.info.insertPlainText(
-            'Simple link example:' + "\n" + "\n")
-        self.tab3.info.insertPlainText(
-            'https://www.youtube.com/watch?v=UojBaKX5Vz4' + "\n" + "\n" + "\n")
-        self.tab3.info.insertPlainText(
-            'Playlist link example:' + "\n" + "\n")
-        self.tab3.info.insertPlainText(
+        self.tab3.info.setGeometry(25, 35, 750, 350)
+        self.tab3.info.setFont(QtGui.QFont('Arial', 12))
+        self.tab3.info.insertPlainText('Download Music and Videos from Youtube' + "\n" + "\n" + "\n")
+
+        self.tab3.info_details = QPlainTextEdit(self.tab3)
+        self.tab3.info_details.setGeometry(25, 80, 750, 350)
+        self.tab3.info_details.setFont(QtGui.QFont('Arial', 10))
+        self.tab3.info_details.insertPlainText(
+            'You can search your music or to introduce the link of your favorite video' + "\n" + "\n")
+        self.tab3.info_details.insertPlainText(
+            'Examples:' + "\n" + "\n")
+        self.tab3.info_details.insertPlainText(
+            'https://www.youtube.com/watch?v=RB-RcX5DS5A' + "\n" + "\n" + "\n")
+        self.tab3.info_details.insertPlainText(
+            'https://www.youtube.com/watch?v=Z9AmPSXAOFw&list=RDRB-RcX5DS5A&index=7' + "\n" + "\n" + "\n")
+        self.tab3.info_details.insertPlainText(
+            'or a Playlist:' + "\n" + "\n")
+        self.tab3.info_details.insertPlainText(
             'https://www.youtube.com/playlist?list=RDEMDHx1mzcs_wPqWOntgHDScQ' + "\n" + "\n" + "\n")
-        self.tab3.info.insertPlainText(
-            'List of video link example:' + "\n" + "\n")
-        self.tab3.info.insertPlainText(
-            'https://www.youtube.com/watch?v=0_U4D3Wy-7k&list=RDEMDHx1mzcs_wPqWOntgHDScQ&index=5' + "\n" + "\n")
-        self.tab3.info.insertPlainText(
-            "In this case, if you want to download all of them, mark the check box: 'Download all related videos'" + "\n" + "\n")
+        self.tab3.info_details.insertPlainText(
+            'Check your download in:' + "\n" + "\n" + "\n")
+        self.tab3.info_details.insertPlainText(
+            '       \Downloads\yuhook_music' + "\n" + "\n" + "\n")
+        self.tab3.info_details.insertPlainText(
+            '       \Downloads\yuhook_videos' + "\n" + "\n" + "\n")
+
+        # photo
+        self.tab3.photo_label = QLabel(self.tab3)
+        photo_path = './images/Captura.png'
+        # Pycharm
+        pixmap = QPixmap(photo_path)
+        # Exe
+        # pixmap = QPixmap(resource_path(photo_path))
+        self.tab3.photo_label.setPixmap(pixmap)
+        self.tab3.photo_label.setGeometry(1035, 10, 111, 89)
+
+        # Information
+        self.tab3.instructions4 = QLabel(self.tab3)
+        self.tab3.instructions4.setStyleSheet('color: black')
+        self.tab3.instructions4.setFont(QtGui.QFont('Arial', 7))
+        self.tab3.instructions4.setText("Enjoy, by Mons 2020")
+        self.tab3.instructions4.setGeometry(1045, 625, 300, 20)
+
 
         # Add tabs to widget
         self.layout.addWidget(self.tabs)
@@ -220,6 +248,7 @@ class youdwnl_tabs(QWidget):
 
     def finished(self):
         self.tab2.textmessage.setText('Data download completed')
+        self.tab2.pbar.setValue(0)
         print('Finito')
 
     def finished_prgb(self):
@@ -234,7 +263,12 @@ class youdwnl_tabs(QWidget):
     def clear_tab2(self):
         self.tab2.searchtextbox.setText('')
         self.tab2.textmessage.setText("Ready to download")
-        self.tab2.tableWidget.setVisible(False)
+        self.tab2.tableWidget.setRowCount(0)
+        self.tab2.tableWidget.setColumnCount(0)
+        self.tab2.tableWidget.setRowCount(max_results)
+        self.tab2.tableWidget.setColumnCount(6)
+        self.tab2.tableWidget.setHorizontalHeaderLabels(['Check', 'Photo', 'Title', 'Link', 'Duration', 'Views'])
+        self.tab2.pbar.setValue(0)
 
 
 
@@ -283,7 +317,7 @@ class youdwnl_tabs(QWidget):
 
         print('oooooooooooooo', search_data)
         if search_data == '':
-            self.tab2.textmessage.setText("Fill the search field")
+            self.tab2.textmessage.setText("Insert a title")
             return 0
 
 
@@ -318,8 +352,8 @@ class youdwnl_tabs(QWidget):
         if chk_playlist == 1:
             search = SearchPlaylists(search_data_formatted, offset=1, mode="json", max_results=max_results)
         else:
-            print('search 4 = ', search_data_formatted)
             search = SearchVideos(search_data_formatted, offset=1, mode="json", max_results=max_results)
+
 
         search_data = json.loads(search.result())
 
@@ -342,7 +376,8 @@ class youdwnl_tabs(QWidget):
             self.tab2.tableWidget.setRowCount(0)
             self.tab2.tableWidget.setColumnCount(0)
             self.tab2.tableWidget.setRowCount(max_results)
-            self.tab2.tableWidget.setColumnCount(4)
+            self.tab2.tableWidget.setColumnCount(6)
+            self.tab2.tableWidget.setHorizontalHeaderLabels(['Check', 'Photo', 'Title', 'Link', 'Duration', 'Views'])
             check_box_list = []
             check_box_in_table = ''
             for i in range(max_results):
@@ -356,7 +391,9 @@ class youdwnl_tabs(QWidget):
             # Regular search
             i = 0
             for link in search_result_dict:
+                print('kkkkkk', len(search_result_dict))
                 print(link['link'])
+                print('llll',link['views'])
 
                 # Load images only for videos and not playlist
                 # if self.tab2.boxvd.checkState() == 2:
@@ -385,6 +422,8 @@ class youdwnl_tabs(QWidget):
 
                 self.tab2.tableWidget.setItem(i, 2, QTableWidgetItem(link['title']))
                 self.tab2.tableWidget.setItem(i, 3, QTableWidgetItem(link['link']))
+                self.tab2.tableWidget.setItem(i, 4, QTableWidgetItem(link['duration']))
+                self.tab2.tableWidget.setItem(i, 5, QTableWidgetItem(str(link['views'])))
                 self.tab2.tableWidget.resizeColumnsToContents()
 
                 i += 1
@@ -393,7 +432,8 @@ class youdwnl_tabs(QWidget):
             self.tab2.tableWidget.setRowCount(0)
             self.tab2.tableWidget.setColumnCount(0)
             self.tab2.tableWidget.setRowCount(1)
-            self.tab2.tableWidget.setColumnCount(4)
+            self.tab2.tableWidget.setColumnCount(6)
+            self.tab2.tableWidget.setHorizontalHeaderLabels(['Check', 'Photo', 'Title', 'Link', 'Duration', 'Views'])
             link = search_result_dict[0]
             print(link['link'])
 
@@ -430,5 +470,7 @@ class youdwnl_tabs(QWidget):
 
             self.tab2.tableWidget.setItem(0, 2, QTableWidgetItem(link['title']))
             self.tab2.tableWidget.setItem(0, 3, QTableWidgetItem(link['link']))
+            self.tab2.tableWidget.setItem(0, 4, QTableWidgetItem(link['duration']))
+            self.tab2.tableWidget.setItem(0, 5, QTableWidgetItem(link['views']))
             self.tab2.tableWidget.resizeColumnsToContents()
 

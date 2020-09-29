@@ -45,13 +45,13 @@ ydl_video = {
     'format': 'best',
     'dumpjson': True,
     'progress_hooks': [my_hook],
-    'outtmpl': SAVE_PATH + '/_video/%(title)s.%(ext)s',
+    'outtmpl': SAVE_PATH + '/yuhook_videos/%(title)s.%(ext)s',
 }
 
 ydl_audio = {
     'format': 'bestaudio/best',
     'progress_hooks': [my_hook],
-    'outtmpl': SAVE_PATH + '/_audio/%(title)s.%(ext)s',
+    'outtmpl': SAVE_PATH + '/yuhook_music/%(title)s.%(ext)s',
 }
 
 
@@ -77,24 +77,24 @@ class DownloadData(QThread):
         # Download videos
 
         # .exe
-        # ffmpeg_path = "./ffmpeg/ffmpeg.exe"
+        ffmpeg_path = "./ffmpeg/ffmpeg.exe"
 
         # pycharm exe
-        ffmpeg_path = ".\\ffmpeg\\ffmpeg.exe"
+        # ffmpeg_path = ".\\ffmpeg\\ffmpeg.exe"
 
         # create directories
-        video_directory = os.path.join(SAVE_PATH, '_video')
+        video_directory = os.path.join(SAVE_PATH, 'yuhook_videos')
 
         if not os.path.isdir(video_directory):
             os.mkdir(video_directory)
 
-        audio_directory = os.path.join(SAVE_PATH, '_audio')
+        audio_directory = os.path.join(SAVE_PATH, 'yuhook_music')
 
         if not os.path.isdir(audio_directory):
             os.mkdir(audio_directory)
 
-        video_path = os.path.expanduser('~\Downloads\_video')
-        audio_path = os.path.expanduser('~\Downloads\_audio')
+        video_path = os.path.expanduser('~\Downloads\yuhook_videos')
+        audio_path = os.path.expanduser('~\Downloads\yuhook_music')
 
         # Only music
         if self.dwl_choice == 'Only Music':
@@ -125,12 +125,12 @@ class DownloadData(QThread):
                 # os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
                 #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
-                os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
-                          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
+                #os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
+                #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
                 # exe
-                # os.system(resource_path(ffmpeg_path) + ' -i ' + audio_path + '\\' + filename_new +
-                #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
+                os.system(resource_path(ffmpeg_path) + ' -i ' + audio_path + '\\' + filename_new +
+                          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
                 os.remove(audio_path + '\\' + filename_new)
 
@@ -173,14 +173,14 @@ class DownloadData(QThread):
 
                     # Generate audio
                     # pycharm exe
-                    if filename_new_mp3 not in os.listdir(audio_path):
-                        os.system(ffmpeg_path + ' -i ' + resource_path(video_path + video_name) +
-                                  ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + resource_path(audio_path + audio_name))
+                    #if filename_new_mp3 not in os.listdir(audio_path):
+                    #    os.system(ffmpeg_path + ' -i ' + resource_path(video_path + video_name) +
+                    #              ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + resource_path(audio_path + audio_name))
 
                     # .exe
-                    # if filename_new_mp3 not in os.listdir(audio_path):
-                    #    os.system(resource_path(ffmpeg_path) + ' -i ' + resource_path(video_path + video_name) +
-                    #              ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + resource_path(audio_path + audio_name))
+                    if filename_new_mp3 not in os.listdir(audio_path):
+                        os.system(resource_path(ffmpeg_path) + ' -i ' + resource_path(video_path + video_name) +
+                                  ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + resource_path(audio_path + audio_name))
 
         self.signal.emit('Holaaaaaaa')
 
