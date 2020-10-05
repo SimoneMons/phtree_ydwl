@@ -99,11 +99,12 @@ class DownloadData(QThread):
         # Only music
         if self.dwl_choice == 'Only Music':
             # self.l.setText("Downloading Music")
+            # print('opopopopopopopopo')
             with youtube_dl.YoutubeDL(ydl_audio) as ydlaudio:
                 for id_video in self.video_id_list:
                     ydlaudio.download([id_video])
 
-            # convert to webm to mp3
+            # convert webm to mp3
             arr_webm = [x for x in os.listdir(audio_path) if x.endswith(".webm") or x.endswith(".m4a")]
             print(arr_webm)
 
@@ -118,6 +119,8 @@ class DownloadData(QThread):
 
                 filename_new = filename_new.replace(" ", "_")
 
+                filename_new = filename_new.replace("•", "_")
+
                 os.rename(audio_path + '\\' + filename_old, audio_path + '\\' + filename_new)
                 print('old ', filename_old)
                 print('new ', filename_new)
@@ -125,7 +128,7 @@ class DownloadData(QThread):
                 # os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
                 #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
-                #os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
+                # os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
                 #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
                 # exe
@@ -141,46 +144,50 @@ class DownloadData(QThread):
                 for id_video in self.video_id_list:
                     ydlvideo.download([id_video])
 
+        # Music & Video
         else:
-            # self.tab1.textmessage.setText('Downloading Videos')
+            # Downloading Video
             with youtube_dl.YoutubeDL(ydl_video) as ydlvideo:
                 for id_video in self.video_id_list:
                     ydlvideo.download([id_video])
 
-            # Create audio files
+            # Downloading Music
+            with youtube_dl.YoutubeDL(ydl_audio) as ydlaudio:
+                for id_video in self.video_id_list:
+                    ydlaudio.download([id_video])
+
+            # Convert webm to mp3
+            arr_webm = [x for x in os.listdir(audio_path) if x.endswith(".webm") or x.endswith(".m4a")]
+            print(arr_webm)
+
             # self.tab1.textmessage.setText('Creating MP3 files')
 
-            for file in os.listdir(video_path):
-                if file.endswith(".mp4"):
-                    filename = file
-                    filename_new = re.sub(r"\s+", '_', filename)
-                    # Rename file
+            for file in arr_webm:
+                filename_old = file
+                # filename_new_ap = re.sub(r"\s+", '_', filename_old)
+                # filename_new = re.sub(r"&+", '_', filename_new_ap)
 
-                    filename_new_mp3 = filename_new[:-4] + '.mp3'
+                filename_new = filename_old.replace("&", "_")
 
-                    old_file = os.path.join(video_path, filename)
+                filename_new = filename_new.replace(" ", "_")
 
-                    new_file = os.path.join(video_path, filename_new)
+                filename_new = filename_new.replace("•", "_")
 
-                    if filename_new not in os.listdir(video_path):
-                        os.rename(old_file, new_file)
+                os.rename(audio_path + '\\' + filename_old, audio_path + '\\' + filename_new)
+                print('old ', filename_old)
+                print('new ', filename_new)
+                # pycharm exe
+                # os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
+                #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
-                    video_name = '\\' + filename_new
-                    audio_name = '\\' + os.path.splitext(video_name)[0] + '.mp3'
+                # os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
+                #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
-                    print(video_name)
-                    print(audio_name)
+                # exe
+                os.system(resource_path(ffmpeg_path) + ' -i ' + audio_path + '\\' + filename_new +
+                          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
-                    # Generate audio
-                    # pycharm exe
-                    #if filename_new_mp3 not in os.listdir(audio_path):
-                    #    os.system(ffmpeg_path + ' -i ' + resource_path(video_path + video_name) +
-                    #              ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + resource_path(audio_path + audio_name))
-
-                    # .exe
-                    if filename_new_mp3 not in os.listdir(audio_path):
-                        os.system(resource_path(ffmpeg_path) + ' -i ' + resource_path(video_path + video_name) +
-                                  ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + resource_path(audio_path + audio_name))
+                os.remove(audio_path + '\\' + filename_new)
 
         self.signal.emit('Holaaaaaaa')
 
@@ -201,9 +208,9 @@ class Progressbar(QThread):
         while cnt < 98:
             cnt = count_percent
             time.sleep(2)
-            print('count111111', count_percent)
+            # print('count111111', count_percent)
             self.signal_prgb.emit(count_percent)
 
-        time.sleep(1)
+        time.sleep(2)
 
         self.signal_end.emit('Holaaaffffaaaa')

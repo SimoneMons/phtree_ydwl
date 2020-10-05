@@ -337,8 +337,17 @@ class youdwnl_tabs(QWidget):
 
         # Single video with list in link
         if 'watch?v=' and '&list' in search_data:
+            print('ññññññññññññññññ')
             single_search = 1
             result = search_data.find('list')
+            search_data_formatted = search_data[0:result - 1]
+            print('search 2 = ', search_data_formatted)
+
+        # Single video with feature in link
+        if 'watch?v=' and '&feature' in search_data:
+            print('ññññññññññññññññ')
+            single_search = 1
+            result = search_data.find('feature')
             search_data_formatted = search_data[0:result - 1]
             print('search 2 = ', search_data_formatted)
 
