@@ -5,7 +5,7 @@ import io
 import re
 
 import requests
-from bs4 import BeautifulSoup
+#from bs4 import BeautifulSoup
 
 
 '''with urllib.request.urlopen('https://www.youtube.com/watch?list=RDEMDHx1mzcs_wPqWOntgHDScQ') as response:
@@ -17,7 +17,7 @@ print(html)
 #print(html)
 
 
-vgm_url = 'https://m.youtube.com/playlist/?list=RDEMDHx1mzcs_wPqWOntgHDScQ'
+vgm_url = 'http://thenostalgiamachine.com/1957'
 html_text = requests.get(vgm_url).text
 print(html_text)
 
