@@ -33,19 +33,23 @@ class youdwnl_tabs(QWidget):
 
         # Initialize tab screen
         self.tabs = QTabWidget()
-        self.tab1 = QWidget()
+        #self.tab1 = QWidget()
         self.tab2 = QWidget()
         self.tab3 = QWidget()
+        self.tab4 = QWidget()
         # self.tabs.setFixedSize(600, 400)
 
         # Add tabs
         # self.tabs.addTab(self.tab1, "Link")
-        self.tabs.addTab(self.tab2, "Search")
+        self.tabs.addTab(self.tab2, "Search in Youtube")
+        self.tabs.addTab(self.tab4, "Nostalgia Machine")
         self.tabs.addTab(self.tab3, "Info")
+
 
         # self.tab1UI()
         self.tab2UI()
         self.tab3UI()
+        self.tab4UI()
 
     def tab2UI(self):
 
@@ -224,6 +228,142 @@ class youdwnl_tabs(QWidget):
         # Add tabs to widget
         self.layout.addWidget(self.tabs)
         self.setLayout(self.layout)
+
+    def tab4UI(self):
+
+        # Nostalgia Machine TAB 4
+        self.tab4.label = QLabel(self.tab4)
+        self.tab4.label.setStyleSheet('color: black')
+        self.tab4.label.setFont(QtGui.QFont('Arial', 10))
+        self.tab4.label.setText("Download your music or video from The Nostalgia Machine Page")
+        self.tab4.label.setGeometry(50, 20, 500, 20)
+
+        '''
+        # Search tab 2
+        self.tab2.searchtextbox = QLineEdit(self.tab2)
+        self.tab2.searchtextbox.setGeometry(50, 45, 330, 20)
+        self.tab2.searchtextbox.returnPressed.connect(self.oh_no_search)
+        '''
+
+        # Combo choice
+
+        self.tab4.combo_choice = QComboBox(self.tab4)
+        self.tab4.combo_choice.addItem("Only Music")
+        self.tab4.combo_choice.addItem("Only Video")
+        self.tab4.combo_choice.addItem("Video & Music")
+        # self.tab1.combo_choice.setStyleSheet("QComboBox"
+        #                                "{"
+        #                                "background-color: white;"
+        #                                "}")
+        self.tab4.combo_choice.move(200, 85)
+        self.tab4.combo_choice.resize(100, 25)
+        #self._toggle = True
+
+        self.tab4.combo_choice_year = QComboBox(self.tab4)
+        for i in range(1951, 2016):
+            self.tab4.combo_choice_year.addItem(str(i))
+        self.tab4.combo_choice_year.move(75, 85)
+        self.tab4.combo_choice_year.resize(100, 25)
+
+        '''
+        # check box video
+        self.tab2.boxvd = QCheckBox("Search videos", self.tab2)
+        # self.tab2.boxvd.setChecked(False)
+        # self.tab2.boxvd.stateChanged.connect(self.change_checkbox_video)
+        self.tab2.boxvd.setChecked(self._toggle)
+        self.tab2.boxvd.clicked.connect(self.toggle)
+        self.tab2.boxvd.move(200, 70)
+        self.tab2.boxvd.resize(320, 40)
+
+        # check box playlist
+        self.tab2.boxpl = QCheckBox("Search playlist", self.tab2)
+        # self.tab2.boxpl.setChecked(False)
+        # self.tab2.boxpl.stateChanged.connect(self.change_checkbox_pllist)
+        self.tab2.boxpl.setChecked(not self._toggle)
+        self.tab2.boxpl.clicked.connect(self.toggle)
+        self.tab2.boxpl.move(320, 70)
+        self.tab2.boxpl.resize(320, 40)
+        
+        # Search button
+        self.tab2.search_button = QPushButton('Search', self.tab2)
+        self.tab2.search_button.setToolTip('Click here to search your music and videos')
+        self.tab2.search_button.setFont(QtGui.QFont('Arial', 10))
+        # self.tab1.dwl.setStyleSheet("QPushButton"
+        #                       "{"
+        #                       "background-color: #C0C0C0; border-radius: 10px;"
+        #                       "}")
+        self.tab2.search_button.setGeometry(75, 85, 100, 25)
+        self.tab2.search_button.clicked.connect(self.oh_no_search)
+
+
+        # Clear button
+        self.tab2.cls = QPushButton('Clear data', self.tab2)
+        self.tab2.cls.setToolTip('Click here to clear the data')
+        self.tab2.cls.setFont(QtGui.QFont('Arial', 9))
+        self.tab2.cls.setGeometry(200, 85, 100, 25)
+        # self.tab1.cls.setStyleSheet("QPushButton"
+        #                       "{"
+        #                       "background-color: #C0C0C0; border-radius: 10px;"
+        #                       "}")
+        self.tab2.cls.clicked.connect(self.clear_tab2)
+
+        # Download button
+        self.tab2.dwl = QPushButton('Download', self.tab2)
+        self.tab2.dwl.setToolTip('Click here to download your music & video')
+        self.tab2.dwl.setFont(QtGui.QFont('Arial', 9))
+        # self.tab1.dwl.setStyleSheet("QPushButton"
+        #                       "{"
+        #                       "background-color: #C0C0C0; border-radius: 10px;"
+        #                       "}")
+        self.tab2.dwl.setGeometry(1045, 250, 100, 25)
+        self.tab2.dwl.clicked.connect(self.download_search_result)
+
+        # Message text
+        self.tab2.textmessage = QLabel(self.tab2)
+        self.tab2.textmessage.setStyleSheet('color: black')
+        self.tab2.textmessage.setText("Ready to download")
+        self.tab2.textmessage.setFont(QtGui.QFont('Arial', 10))
+        self.tab2.textmessage.setGeometry(710, 598, 300, 20)
+
+        # Progress bar
+        self.tab2.pbar = QProgressBar(self.tab2)
+        self.tab2.pbar.setGeometry(300, 600, 390, 15)
+        self.tab2.pbar.setValue(0)
+
+
+        # Search result
+        self.tab2.tableWidget = QTableWidget(self.tab2)
+        self.tab2.tableWidget.setRowCount(max_results)
+        self.tab2.tableWidget.setColumnCount(6)
+        self.tab2.tableWidget.setGeometry(20, 150, 1010, 430)
+        self.tab2.tableWidget.setHorizontalHeaderLabels(['Check', 'Photo', 'Title', 'Link', 'Duration', 'Views'])
+        self.tab2.tableWidget.horizontalHeader().setStyleSheet(
+            "QHeaderView::section { border-bottom: 1px solid green; }")
+        self.tab2.tableWidget.verticalHeader().setDefaultSectionSize(120)
+        self.tab2.tableWidget.verticalHeader().setVisible(True)
+        self.tab2.tableWidget.horizontalHeader().setVisible(True)
+        self.tab2.tableWidget.setShowGrid(True)
+        #self.tab2.tableWidget.setVisible(False)
+
+
+        # Information
+        self.tab2.instructions4 = QLabel(self.tab2)
+        self.tab2.instructions4.setStyleSheet('color: black')
+        self.tab2.instructions4.setFont(QtGui.QFont('Arial', 7))
+        self.tab2.instructions4.setText("Enjoy, by Mons 2020")
+        self.tab2.instructions4.setGeometry(1045, 625, 300, 20)
+        '''
+
+        # photo
+        self.tab4.photo_label = QLabel(self.tab4)
+        photo_path = './images/Captura.png'
+        # Pycharm
+        pixmap = QPixmap(photo_path)
+        # Exe
+        # pixmap = QPixmap(resource_path(photo_path))
+        self.tab4.photo_label.setPixmap(pixmap)
+        self.tab4.photo_label.setGeometry(1035, 10, 111, 89)
+
 
     @QtCore.pyqtSlot()
     def toggle(self):
