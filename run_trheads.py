@@ -1,15 +1,16 @@
-from PyQt5.QtCore import pyqtSignal, QThread
-import youtube_dl
-import os, sys
-import re
+import os
+import sys
 import time
+
+import youtube_dl
+from PyQt5.QtCore import pyqtSignal, QThread
+from validate_link import validate_link
 
 # Global variables
 SAVE_PATH = os.path.expanduser('~/Downloads')
 
 count_percent = 0
 number_of_downloads = 0
-
 number_of_downloads_ended = 0
 
 
@@ -77,10 +78,10 @@ class DownloadData(QThread):
         # Download videos
 
         # .exe
-        ffmpeg_path = "./ffmpeg/ffmpeg.exe"
+        #ffmpeg_path = "./ffmpeg/ffmpeg.exe"
 
         # pycharm exe
-        # ffmpeg_path = ".\\ffmpeg\\ffmpeg.exe"
+        ffmpeg_path = ".\\ffmpeg\\ffmpeg.exe"
 
         # create directories
         video_directory = os.path.join(SAVE_PATH, 'yuhook_videos')
@@ -99,10 +100,15 @@ class DownloadData(QThread):
         # Only music
         if self.dwl_choice == 'Only Music':
             # self.l.setText("Downloading Music")
-            # print('opopopopopopopopo')
+            #print('opopopopopopopopo')
             with youtube_dl.YoutubeDL(ydl_audio) as ydlaudio:
                 for id_video in self.video_id_list:
-                    ydlaudio.download([id_video])
+                    if validate_link(id_video) == 0:
+                        print('Video available:', id_video)
+                        ydlaudio.download([id_video])
+                    else:
+                        print('Video not available: ', id_video)
+                        pass
 
             # convert webm to mp3
             arr_webm = [x for x in os.listdir(audio_path) if x.endswith(".webm") or x.endswith(".m4a")]
@@ -125,15 +131,15 @@ class DownloadData(QThread):
                 print('old ', filename_old)
                 print('new ', filename_new)
                 # pycharm exe
-                # os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
-                #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
+                os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
+                          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
                 # os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
                 #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
                 # exe
-                os.system(resource_path(ffmpeg_path) + ' -i ' + audio_path + '\\' + filename_new +
-                          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
+                #os.system(resource_path(ffmpeg_path) + ' -i ' + audio_path + '\\' + filename_new +
+                #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
                 os.remove(audio_path + '\\' + filename_new)
 
@@ -177,15 +183,15 @@ class DownloadData(QThread):
                 print('old ', filename_old)
                 print('new ', filename_new)
                 # pycharm exe
-                # os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
-                #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
+                os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
+                          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
                 # os.system(ffmpeg_path + ' -i ' + audio_path + '\\' + filename_new +
                 #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
                 # exe
-                os.system(resource_path(ffmpeg_path) + ' -i ' + audio_path + '\\' + filename_new +
-                          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
+                #os.system(resource_path(ffmpeg_path) + ' -i ' + audio_path + '\\' + filename_new +
+                #          ' -vn -ar 44100 -ac 2 -ab 192k -f mp3 ' + audio_path + '\\' + filename_new[:-5] + '.mp3')
 
                 os.remove(audio_path + '\\' + filename_new)
 

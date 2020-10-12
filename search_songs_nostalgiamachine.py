@@ -46,11 +46,14 @@ def search_songs_nm(year_to_downlad):
             list_of_songs_for_year.append(dict_of_songs.copy())
 
     for i in range(0, len(list_of_songs_for_year)):
-        if list_of_songs_for_year[0]['year'] == year_to_downlad:
+        #print('jjjjjjjjjjjjjjjjjjjjj')
+        #print(list_of_songs_for_year[0]['year'])
+        if (list_of_songs_for_year[i]['year']) == year_to_downlad:
+            print(list_of_songs_for_year[i]['year'])
+            print(list_of_songs_for_year[i]['title'])
             list_of_link_to_download.append('https://www.youtube.com/watch?v=' +
                                             str(list_of_songs_for_year[i]['link']).replace('"', ''))
 
+    #print(list_of_link_to_download)
+
     return list_of_link_to_download
-
-
-search_songs_nm('1951')

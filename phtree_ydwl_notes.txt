@@ -147,5 +147,16 @@ https://stackoverflow.com/questions/53689952/show-multiple-images
 
 https://codefather.tech/blog/youtube-search-python/
 
+https://stackoverflow.com/questions/38282978/pyqt-button-start-another-script-from-another-file
+
+import myScript
+
+...
+self.myButton.clicked.connect(self.run_myScript)
+def run_myScript(self):
+    myScript()
+
+"status":"ERROR"
+
 
 
