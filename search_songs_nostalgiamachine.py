@@ -49,11 +49,11 @@ def search_songs_nm(year_to_downlad):
         #print('jjjjjjjjjjjjjjjjjjjjj')
         #print(list_of_songs_for_year[0]['year'])
         if (list_of_songs_for_year[i]['year']) == year_to_downlad:
-            print(list_of_songs_for_year[i]['year'])
-            print(list_of_songs_for_year[i]['title'])
+            #print(list_of_songs_for_year[i]['year'])
+            #print(list_of_songs_for_year[i]['title'])
             list_of_link_to_download.append('https://www.youtube.com/watch?v=' +
                                             str(list_of_songs_for_year[i]['link']).replace('"', ''))
 
     #print(list_of_link_to_download)
 
-    return list_of_link_to_download
+    return (list_of_link_to_download, list_of_songs_for_year)

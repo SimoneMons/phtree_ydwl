@@ -97,12 +97,14 @@ class DownloadData(QThread):
         video_path = os.path.expanduser('~\Downloads\yuhook_videos')
         audio_path = os.path.expanduser('~\Downloads\yuhook_music')
 
+        #print('simone111111111111111')
+
         # Only music
         if self.dwl_choice == 'Only Music':
-            # self.l.setText("Downloading Music")
-            #print('opopopopopopopopo')
+            print('aaaaaaaaaaa', self.video_id_list)
             with youtube_dl.YoutubeDL(ydl_audio) as ydlaudio:
                 for id_video in self.video_id_list:
+                    print('opopopopopopopopo', id_video)
                     if validate_link(id_video) == 0:
                         print('Video available:', id_video)
                         ydlaudio.download([id_video])

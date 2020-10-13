@@ -232,15 +232,7 @@ class youdwnl_tabs(QWidget):
         self.tab4.label.setText("Download your music or video from The Nostalgia Machine Page")
         self.tab4.label.setGeometry(50, 20, 500, 20)
 
-        '''
-        # Search tab 2
-        self.tab2.searchtextbox = QLineEdit(self.tab2)
-        self.tab2.searchtextbox.setGeometry(50, 45, 330, 20)
-        self.tab2.searchtextbox.returnPressed.connect(self.oh_no_search)
-        '''
-
-        # Combo choice
-
+        # Combo choice music video
         self.tab4.combo_choice = QComboBox(self.tab4)
         self.tab4.combo_choice.addItem("Only Music")
         self.tab4.combo_choice.addItem("Only Video")
@@ -249,15 +241,16 @@ class youdwnl_tabs(QWidget):
         #                                "{"
         #                                "background-color: white;"
         #                                "}")
-        self.tab4.combo_choice.move(200, 85)
+        self.tab4.combo_choice.move(1045, 200)
         self.tab4.combo_choice.resize(100, 25)
         # self._toggle = True
 
+        # Combo choice year
         self.tab4.combo_choice_year = QComboBox(self.tab4)
         for i in range(1951, 2016):
             self.tab4.combo_choice_year.addItem(str(i))
         self.tab4.combo_choice_year.move(75, 85)
-        self.tab4.combo_choice_year.resize(100, 25)
+        self.tab4.combo_choice_year.resize(100, 23)
 
         # Download button
         self.tab4.dwl = QPushButton('Download', self.tab4)
@@ -267,8 +260,8 @@ class youdwnl_tabs(QWidget):
         #                       "{"
         #                       "background-color: #C0C0C0; border-radius: 10px;"
         #                       "}")
-        self.tab4.dwl.setGeometry(350, 85, 100, 27)
-        self.tab4.dwl.clicked.connect(self.search_songs_nostagia_machine)
+        self.tab4.dwl.setGeometry(1045, 250, 100, 25)
+        self.tab4.dwl.clicked.connect(self.download_songs_nostagia_machine)
 
         # Message text
         self.tab4.textmessage = QLabel(self.tab4)
@@ -282,85 +275,48 @@ class youdwnl_tabs(QWidget):
         self.tab4.pbar.setGeometry(300, 600, 390, 15)
         self.tab4.pbar.setValue(0)
 
-        '''
-        # check box video
-        self.tab2.boxvd = QCheckBox("Search videos", self.tab2)
-        # self.tab2.boxvd.setChecked(False)
-        # self.tab2.boxvd.stateChanged.connect(self.change_checkbox_video)
-        self.tab2.boxvd.setChecked(self._toggle)
-        self.tab2.boxvd.clicked.connect(self.toggle)
-        self.tab2.boxvd.move(200, 70)
-        self.tab2.boxvd.resize(320, 40)
-
-        # check box playlist
-        self.tab2.boxpl = QCheckBox("Search playlist", self.tab2)
-        # self.tab2.boxpl.setChecked(False)
-        # self.tab2.boxpl.stateChanged.connect(self.change_checkbox_pllist)
-        self.tab2.boxpl.setChecked(not self._toggle)
-        self.tab2.boxpl.clicked.connect(self.toggle)
-        self.tab2.boxpl.move(320, 70)
-        self.tab2.boxpl.resize(320, 40)
-        
         # Search button
-        self.tab2.search_button = QPushButton('Search', self.tab2)
-        self.tab2.search_button.setToolTip('Click here to search your music and videos')
-        self.tab2.search_button.setFont(QtGui.QFont('Arial', 10))
-        # self.tab1.dwl.setStyleSheet("QPushButton"
-        #                       "{"
-        #                       "background-color: #C0C0C0; border-radius: 10px;"
-        #                       "}")
-        self.tab2.search_button.setGeometry(75, 85, 100, 25)
-        self.tab2.search_button.clicked.connect(self.oh_no_search)
-
-
-        # Clear button
-        self.tab2.cls = QPushButton('Clear data', self.tab2)
-        self.tab2.cls.setToolTip('Click here to clear the data')
-        self.tab2.cls.setFont(QtGui.QFont('Arial', 9))
-        self.tab2.cls.setGeometry(200, 85, 100, 25)
+        self.tab4.cls = QPushButton('Search', self.tab4)
+        self.tab4.cls.setToolTip('Click here to clear the data')
+        self.tab4.cls.setFont(QtGui.QFont('Arial', 9))
+        self.tab4.cls.setGeometry(200, 85, 100, 25)
         # self.tab1.cls.setStyleSheet("QPushButton"
         #                       "{"
         #                       "background-color: #C0C0C0; border-radius: 10px;"
         #                       "}")
-        self.tab2.cls.clicked.connect(self.clear_tab2)
+        self.tab4.cls.clicked.connect(self.search_tab4)
 
-        
-
-        # Message text
-        self.tab2.textmessage = QLabel(self.tab2)
-        self.tab2.textmessage.setStyleSheet('color: black')
-        self.tab2.textmessage.setText("Ready to download")
-        self.tab2.textmessage.setFont(QtGui.QFont('Arial', 10))
-        self.tab2.textmessage.setGeometry(710, 598, 300, 20)
-
-        # Progress bar
-        self.tab2.pbar = QProgressBar(self.tab2)
-        self.tab2.pbar.setGeometry(300, 600, 390, 15)
-        self.tab2.pbar.setValue(0)
-
+        # Clear button
+        self.tab4.cls = QPushButton('Clear data', self.tab4)
+        self.tab4.cls.setToolTip('Click here to clear the data')
+        self.tab4.cls.setFont(QtGui.QFont('Arial', 9))
+        self.tab4.cls.setGeometry(325, 85, 100, 25)
+        # self.tab1.cls.setStyleSheet("QPushButton"
+        #                       "{"
+        #                       "background-color: #C0C0C0; border-radius: 10px;"
+        #                       "}")
+        self.tab4.cls.clicked.connect(self.clear_tab4)
 
         # Search result
-        self.tab2.tableWidget = QTableWidget(self.tab2)
-        self.tab2.tableWidget.setRowCount(max_results)
-        self.tab2.tableWidget.setColumnCount(6)
-        self.tab2.tableWidget.setGeometry(20, 150, 1010, 430)
-        self.tab2.tableWidget.setHorizontalHeaderLabels(['Check', 'Photo', 'Title', 'Link', 'Duration', 'Views'])
-        self.tab2.tableWidget.horizontalHeader().setStyleSheet(
+        self.tab4.tableWidget = QTableWidget(self.tab4)
+        self.tab4.tableWidget.setRowCount(1)
+        self.tab4.tableWidget.setColumnCount(4)
+        self.tab4.tableWidget.setGeometry(20, 150, 1010, 430)
+        self.tab4.tableWidget.setHorizontalHeaderLabels(['Year', 'Singer', 'Title', 'Link'])
+        self.tab4.tableWidget.horizontalHeader().setStyleSheet(
             "QHeaderView::section { border-bottom: 1px solid green; }")
-        self.tab2.tableWidget.verticalHeader().setDefaultSectionSize(120)
-        self.tab2.tableWidget.verticalHeader().setVisible(True)
-        self.tab2.tableWidget.horizontalHeader().setVisible(True)
-        self.tab2.tableWidget.setShowGrid(True)
-        #self.tab2.tableWidget.setVisible(False)
-
+        # self.tab2.tableWidget.verticalHeader().setDefaultSectionSize(120)
+        self.tab4.tableWidget.verticalHeader().setVisible(True)
+        self.tab4.tableWidget.horizontalHeader().setVisible(True)
+        self.tab4.tableWidget.setShowGrid(True)
+        # self.tab2.tableWidget.setVisible(False)
 
         # Information
-        self.tab2.instructions4 = QLabel(self.tab2)
-        self.tab2.instructions4.setStyleSheet('color: black')
-        self.tab2.instructions4.setFont(QtGui.QFont('Arial', 7))
-        self.tab2.instructions4.setText("Enjoy, by Mons 2020")
-        self.tab2.instructions4.setGeometry(1045, 625, 300, 20)
-        '''
+        self.tab4.instructions4 = QLabel(self.tab4)
+        self.tab4.instructions4.setStyleSheet('color: black')
+        self.tab4.instructions4.setFont(QtGui.QFont('Arial', 7))
+        self.tab4.instructions4.setText("Enjoy, by Mons 2020")
+        self.tab4.instructions4.setGeometry(1045, 625, 300, 20)
 
         # photo
         self.tab4.photo_label = QLabel(self.tab4)
@@ -372,26 +328,58 @@ class youdwnl_tabs(QWidget):
         self.tab4.photo_label.setPixmap(pixmap)
         self.tab4.photo_label.setGeometry(1035, 10, 111, 89)
 
-    def search_songs_nostagia_machine(self):
+    def search_tab4(self):
+        year_to_downlad = str(self.tab4.combo_choice_year.currentText())
+        print('aquiiiiiiiii', year_to_downlad)
+        links, songs = search_songs_nm(year_to_downlad)
+        # print(links)
+        # print(songs)
+        self.tab4.tableWidget.setRowCount(0)
+        y = 0
+        for i in range(0, len(songs)):
+            # print('jjjjjjjjjjjjjjjjjjjjj')
+            # print(list_of_songs_for_year[0]['year'])
+            if (songs[i]['year']) == year_to_downlad:
+                print(songs[i]['year'])
+                print(songs[i]['singer'])
+                print(songs[i]['title'])
+
+                self.tab4.tableWidget.insertRow(y)
+                self.tab4.tableWidget.setItem(y, 0, QTableWidgetItem(str(songs[i]['year'])))
+                self.tab4.tableWidget.setItem(y, 1, QTableWidgetItem(str(songs[i]['singer']).replace('"', '')))
+                self.tab4.tableWidget.setItem(y, 2, QTableWidgetItem(str(songs[i]['title']).replace('"', '')))
+                self.tab4.tableWidget.setItem(y, 3, QTableWidgetItem('https://www.youtube.com/watch?v=' +
+                                                                     str(songs[i]['link']).replace('"', '')))
+
+                y = + 1
+
+        # print(list_of_songs_for_year[i]['year'])
+        # print(list_of_songs_for_year[i]['title'])
+
+        # for i in songs:
+        #    self.tab4.tableWidget.setItem(i, 0, QTableWidgetItem(str(songs[i]['year'])))
+
+        self.tab4.tableWidget.resizeColumnsToContents()
+
+    def download_songs_nostagia_machine(self):
         # Nostalgia Machine page list of songs
-        print('simone111111111111111')
         year_to_downlad = str(self.tab4.combo_choice_year.currentText())
         dwl_choice = str(self.tab4.combo_choice.currentText())
-        video_id_list_search = search_songs_nm(year_to_downlad)
+        links, songs = search_songs_nm(year_to_downlad)
 
         # Define the thread for downloading
-        self.dwnl_thread = DownloadData(video_id_list_search,
+        self.dwnl_thread = DownloadData(links,
                                         dwl_choice)  # Any other args, kwargs are passed to the run function
-        self.dwnl_thread.signal.connect(self.finished)
+        self.dwnl_thread.signal.connect(self.finished_nm)
 
         # Define the thread for progressbar
         self.progressbar_thread = Progressbar()
-        self.progressbar_thread.signal_end.connect(self.finished_prgb)
+        self.progressbar_thread.signal_end.connect(self.finished_prgb_nm)
 
         # Execute the threads
         self.dwnl_thread.start()
         self.progressbar_thread.start()
-        self.progressbar_thread.signal_prgb.connect(self.setProgressVal)
+        self.progressbar_thread.signal_prgb.connect(self.setProgressVal_nm)
 
         self.tab4.textmessage.setText('Downloading data')
 
@@ -420,9 +408,24 @@ class youdwnl_tabs(QWidget):
         self.tab2.pbar.setValue(0)
         print('Finito')
 
+    def finished_nm(self):
+        self.tab4.textmessage.setText('Data download completed')
+        self.tab4.pbar.setValue(0)
+        print('Finito')
+
     def finished_prgb(self):
         self.tab2.textmessage.setText('Creating mp3 files')
         print('Creating MP3 files')
+
+    def finished_prgb_nm(self):
+        self.tab4.textmessage.setText('Creating mp3 files')
+        print('Creating MP3 files')
+
+    def setProgressVal(self, val):
+        self.tab2.pbar.setValue(val)
+
+    def setProgressVal_nm(self, val):
+        self.tab2.pbar.setValue(val)
 
     def clear_tab1(self):
         self.tab1.linktextbox.setText('')
@@ -437,6 +440,16 @@ class youdwnl_tabs(QWidget):
         self.tab2.tableWidget.setColumnCount(6)
         self.tab2.tableWidget.setHorizontalHeaderLabels(['Check', 'Photo', 'Title', 'Link', 'Duration', 'Views'])
         self.tab2.pbar.setValue(0)
+
+    def clear_tab4(self):
+        self.tab4.textmessage.setText("Ready to downloadddddddddddddddddd")
+        print('hhhhhhhhhhhhhhhhhh')
+        self.tab4.tableWidget.setRowCount(0)
+        self.tab4.tableWidget.setColumnCount(0)
+        self.tab4.tableWidget.setRowCount(max_results)
+        self.tab4.tableWidget.setColumnCount(3)
+        self.tab4.tableWidget.setHorizontalHeaderLabels(['Year', 'Singer', 'Titlessss'])
+        self.tab4.pbar.setValue(0)
 
     def download_search_result(self):
         # Download options: Only Video, Only Music, Video & Music
@@ -470,9 +483,6 @@ class youdwnl_tabs(QWidget):
         self.progressbar_thread.signal_prgb.connect(self.setProgressVal)
 
         self.tab2.textmessage.setText('Downloading data')
-
-    def setProgressVal(self, val):
-        self.tab2.pbar.setValue(val)
 
     def oh_no_search(self):
         # Data to search to download
