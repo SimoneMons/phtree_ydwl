@@ -38,22 +38,27 @@ def search_songs_nm(year_to_downlad):
         # print(year)
         for i in range(0, len(songs_string_1)):
             songs_string_2 = songs_string_1[i].split(',')
-            # print(songs_string_2[1])
+            max_link = len(songs_string_2)
             dict_of_songs['year'] = year
             dict_of_songs['singer'] = songs_string_2[0].replace('[', '')
             dict_of_songs['title'] = songs_string_2[1]
             dict_of_songs['link'] = songs_string_2[2]
+            dict_of_songs['link2'] = songs_string_2[max_link - 1]
+            #print(len(songs_string_2))
             list_of_songs_for_year.append(dict_of_songs.copy())
 
     for i in range(0, len(list_of_songs_for_year)):
         #print('jjjjjjjjjjjjjjjjjjjjj')
         #print(list_of_songs_for_year[0]['year'])
         if (list_of_songs_for_year[i]['year']) == year_to_downlad:
+            #print(list_of_songs_for_year[i])
             #print(list_of_songs_for_year[i]['year'])
             #print(list_of_songs_for_year[i]['title'])
             list_of_link_to_download.append('https://www.youtube.com/watch?v=' +
-                                            str(list_of_songs_for_year[i]['link']).replace('"', ''))
+                                            str(list_of_songs_for_year[i]['link2']).replace('"', ''))
 
     #print(list_of_link_to_download)
 
     return (list_of_link_to_download, list_of_songs_for_year)
+
+#search_songs_nm('1960')

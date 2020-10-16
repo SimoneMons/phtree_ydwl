@@ -166,25 +166,28 @@ class youdwnl_tabs(QWidget):
         # photo
         self.tab2.photo_label = QLabel(self.tab2)
         photo_path = './images/Captura.png'
+
         # Pycharm
-        pixmap = QPixmap(photo_path)
+        #pixmap = QPixmap(photo_path)
+
         # Exe
-        # pixmap = QPixmap(resource_path(photo_path))
+        pixmap = QPixmap(resource_path(photo_path))
+
         self.tab2.photo_label.setPixmap(pixmap)
         self.tab2.photo_label.setGeometry(1035, 10, 111, 89)
 
     def tab3UI(self):
         # Information
         self.tab3.info = QPlainTextEdit(self.tab3)
-        self.tab3.info.setGeometry(25, 35, 750, 350)
+        self.tab3.info.setGeometry(25, 35, 750, 450)
         self.tab3.info.setFont(QtGui.QFont('Arial', 12))
-        self.tab3.info.insertPlainText('Download Music and Videos from Youtube' + "\n" + "\n" + "\n")
+        self.tab3.info.insertPlainText("\n" + 'Download Music and Videos from Youtube and Nostalgia Machine' + "\n" + "\n" + "\n")
 
         self.tab3.info_details = QPlainTextEdit(self.tab3)
-        self.tab3.info_details.setGeometry(25, 80, 750, 350)
+        self.tab3.info_details.setGeometry(25, 80, 750, 450)
         self.tab3.info_details.setFont(QtGui.QFont('Arial', 10))
-        self.tab3.info_details.insertPlainText(
-            'You can search your music or to introduce the link of your favorite video' + "\n" + "\n")
+        self.tab3.info_details.insertPlainText("\n" +
+            'You can search your music (free text) or to introduce the link of your favorite video' + "\n" + "\n")
         self.tab3.info_details.insertPlainText(
             'Examples:' + "\n" + "\n")
         self.tab3.info_details.insertPlainText(
@@ -196,19 +199,21 @@ class youdwnl_tabs(QWidget):
         self.tab3.info_details.insertPlainText(
             'https://www.youtube.com/playlist?list=RDEMDHx1mzcs_wPqWOntgHDScQ' + "\n" + "\n" + "\n")
         self.tab3.info_details.insertPlainText(
-            'Check your download in:' + "\n" + "\n" + "\n")
+            'Check files in:' + "\n" + "\n" + "\n")
         self.tab3.info_details.insertPlainText(
-            '       \Downloads\yuhook_music' + "\n" + "\n" + "\n")
+            '       ~\Downloads\yuhook_music' + "\n" + "\n" + "\n")
         self.tab3.info_details.insertPlainText(
-            '       \Downloads\yuhook_videos' + "\n" + "\n" + "\n")
+            '       ~\Downloads\yuhook_videos' + "\n" + "\n" + "\n")
 
         # photo
         self.tab3.photo_label = QLabel(self.tab3)
         photo_path = './images/Captura.png'
+
         # Pycharm
-        pixmap = QPixmap(photo_path)
+        #pixmap = QPixmap(photo_path)
+
         # Exe
-        # pixmap = QPixmap(resource_path(photo_path))
+        pixmap = QPixmap(resource_path(photo_path))
         self.tab3.photo_label.setPixmap(pixmap)
         self.tab3.photo_label.setGeometry(1035, 10, 111, 89)
 
@@ -271,9 +276,9 @@ class youdwnl_tabs(QWidget):
         self.tab4.textmessage.setGeometry(710, 598, 300, 20)
 
         # Progress bar
-        self.tab4.pbar = QProgressBar(self.tab4)
-        self.tab4.pbar.setGeometry(300, 600, 390, 15)
-        self.tab4.pbar.setValue(0)
+        self.tab4.pbar4 = QProgressBar(self.tab4)
+        self.tab4.pbar4.setGeometry(300, 600, 390, 15)
+        self.tab4.pbar4.setValue(0)
 
         # Search button
         self.tab4.cls = QPushButton('Search', self.tab4)
@@ -321,10 +326,12 @@ class youdwnl_tabs(QWidget):
         # photo
         self.tab4.photo_label = QLabel(self.tab4)
         photo_path = './images/Captura.png'
+
         # Pycharm
-        pixmap = QPixmap(photo_path)
+        #pixmap = QPixmap(photo_path)
+
         # Exe
-        # pixmap = QPixmap(resource_path(photo_path))
+        pixmap = QPixmap(resource_path(photo_path))
         self.tab4.photo_label.setPixmap(pixmap)
         self.tab4.photo_label.setGeometry(1035, 10, 111, 89)
 
@@ -349,7 +356,7 @@ class youdwnl_tabs(QWidget):
                 self.tab4.tableWidget.setItem(y, 1, QTableWidgetItem(str(songs[i]['singer']).replace('"', '')))
                 self.tab4.tableWidget.setItem(y, 2, QTableWidgetItem(str(songs[i]['title']).replace('"', '')))
                 self.tab4.tableWidget.setItem(y, 3, QTableWidgetItem('https://www.youtube.com/watch?v=' +
-                                                                     str(songs[i]['link']).replace('"', '')))
+                                                                     str(songs[i]['link2']).replace('"', '')))
 
                 y = + 1
 
@@ -360,28 +367,6 @@ class youdwnl_tabs(QWidget):
         #    self.tab4.tableWidget.setItem(i, 0, QTableWidgetItem(str(songs[i]['year'])))
 
         self.tab4.tableWidget.resizeColumnsToContents()
-
-    def download_songs_nostagia_machine(self):
-        # Nostalgia Machine page list of songs
-        year_to_downlad = str(self.tab4.combo_choice_year.currentText())
-        dwl_choice = str(self.tab4.combo_choice.currentText())
-        links, songs = search_songs_nm(year_to_downlad)
-
-        # Define the thread for downloading
-        self.dwnl_thread = DownloadData(links,
-                                        dwl_choice)  # Any other args, kwargs are passed to the run function
-        self.dwnl_thread.signal.connect(self.finished_nm)
-
-        # Define the thread for progressbar
-        self.progressbar_thread = Progressbar()
-        self.progressbar_thread.signal_end.connect(self.finished_prgb_nm)
-
-        # Execute the threads
-        self.dwnl_thread.start()
-        self.progressbar_thread.start()
-        self.progressbar_thread.signal_prgb.connect(self.setProgressVal_nm)
-
-        self.tab4.textmessage.setText('Downloading data')
 
     @QtCore.pyqtSlot()
     def toggle(self):
@@ -403,29 +388,50 @@ class youdwnl_tabs(QWidget):
             print('Unchecked')
             rows_checked.remove(row)
 
-    def finished(self):
+    # Process End
+    def finished_tab2(self):
         self.tab2.textmessage.setText('Data download completed')
         self.tab2.pbar.setValue(0)
         print('Finito')
 
-    def finished_nm(self):
+    def finished_tab4(self):
         self.tab4.textmessage.setText('Data download completed')
-        self.tab4.pbar.setValue(0)
+        self.tab4.pbar4.setValue(0)
         print('Finito')
 
-    def finished_prgb(self):
-        self.tab2.textmessage.setText('Creating mp3 files')
-        print('Creating MP3 files')
 
-    def finished_prgb_nm(self):
-        self.tab4.textmessage.setText('Creating mp3 files')
-        print('Creating MP3 files')
+    # Dowloading messages
+    def end_video_dwnld_tab2(self, val1, val2):
+        message = "Downloading {} videos of {}.".format(val1, val2)
+        self.tab2.textmessage.setText(message)
 
-    def setProgressVal(self, val):
+    def end_audio_created_tab2(self, val1, val2):
+        message = "Creating {} mp3 of {}.".format(val1, val2)
+        self.tab2.pbar.setValue(0)
+        self.tab2.textmessage.setText(message)
+
+    def end_video_dwnld_tab4(self, val1, val2):
+        message = "Downloading {} videos of {}.".format(val1, val2)
+        self.tab4.textmessage.setText(message)
+
+    def end_audio_created_tab4(self, val1, val2):
+        message = "Creating {} mp3 of {}.".format(val1, val2)
+        self.tab4.textmessage.setText(message)
+        self.tab4.pbar4.setValue(0)
+
+    def end_prgb_tab2(self):
+        self.tab2.pbar.setValue(0)
+
+    def end_prgb_tab4(self):
+        self.tab4.pbar4.setValue(0)
+
+    # Progress bar
+    def setProgressVal_tab2(self, val):
         self.tab2.pbar.setValue(val)
 
-    def setProgressVal_nm(self, val):
-        self.tab2.pbar.setValue(val)
+    def setProgressVal_tab4(self, val):
+        self.tab4.pbar4.setValue(val)
+
 
     def clear_tab1(self):
         self.tab1.linktextbox.setText('')
@@ -442,14 +448,12 @@ class youdwnl_tabs(QWidget):
         self.tab2.pbar.setValue(0)
 
     def clear_tab4(self):
-        self.tab4.textmessage.setText("Ready to downloadddddddddddddddddd")
-        print('hhhhhhhhhhhhhhhhhh')
+        self.tab4.textmessage.setText("Ready to download")
         self.tab4.tableWidget.setRowCount(0)
-        self.tab4.tableWidget.setColumnCount(0)
-        self.tab4.tableWidget.setRowCount(max_results)
-        self.tab4.tableWidget.setColumnCount(3)
-        self.tab4.tableWidget.setHorizontalHeaderLabels(['Year', 'Singer', 'Titlessss'])
-        self.tab4.pbar.setValue(0)
+        self.tab4.tableWidget.setColumnCount(4)
+        self.tab4.tableWidget.setHorizontalHeaderLabels(['Year', 'Singer', 'Title', 'Link'])
+        self.tab4.tableWidget.setRowCount(1)
+        self.tab4.pbar4.setValue(0)
 
     def download_search_result(self):
         # Download options: Only Video, Only Music, Video & Music
@@ -471,18 +475,48 @@ class youdwnl_tabs(QWidget):
         # Define the thread for downloading
         self.dwnl_thread = DownloadData(video_id_list_search,
                                         dwl_choice)  # Any other args, kwargs are passed to the run function
-        self.dwnl_thread.signal.connect(self.finished)
+        self.dwnl_thread.signal_end_download.connect(self.finished_tab2)
+
+        self.dwnl_thread.signal_num_video_dwnld.connect(self.end_video_dwnld_tab2)
+        self.dwnl_thread.signal_num_mp3_created.connect(self.end_audio_created_tab2)
 
         # Define the thread for progressbar
         self.progressbar_thread = Progressbar()
-        self.progressbar_thread.signal_end.connect(self.finished_prgb)
+        self.progressbar_thread.signal_prgb.connect(self.setProgressVal_tab2)
+        self.progressbar_thread.signal_prgb_end.connect(self.end_prgb_tab2)
 
         # Execute the threads
         self.dwnl_thread.start()
         self.progressbar_thread.start()
-        self.progressbar_thread.signal_prgb.connect(self.setProgressVal)
 
         self.tab2.textmessage.setText('Downloading data')
+
+
+    def download_songs_nostagia_machine(self):
+        # Nostalgia Machine page list of songs
+        year_to_downlad = str(self.tab4.combo_choice_year.currentText())
+        dwl_choice = str(self.tab4.combo_choice.currentText())
+        links, songs = search_songs_nm(year_to_downlad)
+
+        # Define the thread for downloading
+        self.dwnl_thread = DownloadData(links,
+                                        dwl_choice)  # Any other args, kwargs are passed to the run function
+        self.dwnl_thread.signal_end_download.connect(self.finished_tab4)
+
+        self.dwnl_thread.signal_num_video_dwnld.connect(self.end_video_dwnld_tab4)
+        self.dwnl_thread.signal_num_mp3_created.connect(self.end_audio_created_tab4)
+
+        # Define the thread for progressbar
+        self.progressbar_thread = Progressbar()
+        self.progressbar_thread.signal_prgb.connect(self.setProgressVal_tab4)
+        self.progressbar_thread.signal_prgb_end.connect(self.end_prgb_tab4)
+
+        # Execute the threads
+        self.dwnl_thread.start()
+        self.progressbar_thread.start()
+
+        self.tab4.textmessage.setText('Downloading data')
+
 
     def oh_no_search(self):
         # Data to search to download
