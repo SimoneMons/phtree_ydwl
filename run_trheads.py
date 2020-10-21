@@ -20,32 +20,32 @@ def my_hook(d):
     global number_of_downloads_ended
     global number_of_not_valid_videos
 
-    print('hjhjhjhjh')
+    #print('hjhjhjhjh')
     if d['status'] == 'finished':
         file_tuple = os.path.split(os.path.abspath(d['filename']))
         #print("Moooooooons Done downloading {}".format(file_tuple[1]))
         #print('total dln:', number_of_downloads)
 
         number_of_downloads_ended += 1
-        print('number of download ended:', number_of_downloads_ended)
-        print('number of not valid videos:', number_of_not_valid_videos)
-        print('number of total downloads:', number_of_downloads)
+        #print('number of download ended:', number_of_downloads_ended)
+        #print('number of not valid videos:', number_of_not_valid_videos)
+        #print('number of total downloads:', number_of_downloads)
 
         if number_of_downloads_ended + number_of_not_valid_videos < number_of_downloads:
             count_percent = 0
         else:
             count_percent = 100
 
-        print('finished', count_percent)
+        #print('finished', count_percent)
 
     if d['status'] == 'downloading':
         # print('111111', d['filename'])
         # count_percent = d['filename']
         # print('2222222', d['_percent_str'])
         # print('dddddddddddd', d['_eta_str'])
-        print(d['_percent_str'])
+        #print(d['_percent_str'])
         count_percent = int(d['_percent_str'][0:3])
-        print('count downloading', count_percent)
+        #print('count downloading', count_percent)
 
 
 ydl_video = {
@@ -76,6 +76,7 @@ class DownloadData(QThread):
 
     signal_num_mp3_created = pyqtSignal(int, int)
 
+
     def __init__(self, video_id_list, dwl_choice, parent=None):
         super(DownloadData, self).__init__(parent)
         self.video_id_list = video_id_list
@@ -83,6 +84,12 @@ class DownloadData(QThread):
 
         global number_of_downloads
         number_of_downloads = len(self.video_id_list)
+
+    def terminate(self):
+        print('terminate22222222222222')
+        self.killed = True
+
+
 
     def run(self):
         global number_of_not_valid_videos
@@ -118,7 +125,7 @@ class DownloadData(QThread):
                     if validate_link(id_video) == 0:
                         count_videos += 1
                         self.signal_num_video_dwnld.emit(count_videos, len(self.video_id_list))
-                        time.sleep(1)
+                        #time.sleep(1)
                         ydlaudio.download([id_video])
                     else:
                         number_of_not_valid_videos += 1
@@ -201,6 +208,7 @@ class DownloadData(QThread):
                     else:
                         print('Video not available: ', id_video)
                         number_of_not_valid_videos += 1
+                        print('numer not valid', number_of_not_valid_videos)
                         pass
 
             # Convert webm to mp3
@@ -240,6 +248,7 @@ class DownloadData(QThread):
         self.signal_end_download.emit('Downloadcompleted')
 
 
+
 class Progressbar(QThread):
     signal_prgb = pyqtSignal(int)
     signal_prgb_end = pyqtSignal(int)
@@ -253,12 +262,13 @@ class Progressbar(QThread):
         global number_of_downloads
         global number_of_downloads_ended
 
-        while number_of_downloads_ended < number_of_downloads:
-            print('count111111 inside prgb', number_of_downloads_ended)
-            print('hhhhh', number_of_downloads)
-            print('percetn to prb', count_percent)
+        while number_of_downloads_ended + number_of_not_valid_videos < number_of_downloads:
+            #print('count111111 inside prgb', number_of_downloads_ended)
+            #print('hhhhh', number_of_downloads)
+            #print('percetn to prb', count_percent)
             self.signal_prgb.emit(count_percent)
-            time.sleep(0.5)
+            #time.sleep(1)
 
         val_end = 0
+        print('finito progress bar')
         self.signal_prgb_end.emit(val_end)

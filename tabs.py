@@ -1,5 +1,6 @@
 import json
 import os
+import time
 import sys
 import urllib.request
 
@@ -59,6 +60,13 @@ class youdwnl_tabs(QWidget):
         self.tab2.label.setFont(QtGui.QFont('Arial', 10))
         self.tab2.label.setText("Search your music or video to download")
         self.tab2.label.setGeometry(50, 20, 300, 20)
+
+        # Information Search tab 2
+        self.tab2.searchtext = QLabel(self.tab2)
+        self.tab2.searchtext.setStyleSheet('color: black')
+        self.tab2.searchtext.setFont(QtGui.QFont('Arial', 10))
+        self.tab2.searchtext.setText("Search!")
+        self.tab2.searchtext.setGeometry(340, 88, 300, 20)
 
         # Search tab 2
         self.tab2.searchtextbox = QLineEdit(self.tab2)
@@ -168,7 +176,7 @@ class youdwnl_tabs(QWidget):
         photo_path = './images/Captura.png'
 
         # Pycharm
-        #pixmap = QPixmap(photo_path)
+        # pixmap = QPixmap(photo_path)
 
         # Exe
         pixmap = QPixmap(resource_path(photo_path))
@@ -181,13 +189,14 @@ class youdwnl_tabs(QWidget):
         self.tab3.info = QPlainTextEdit(self.tab3)
         self.tab3.info.setGeometry(25, 35, 750, 450)
         self.tab3.info.setFont(QtGui.QFont('Arial', 12))
-        self.tab3.info.insertPlainText("\n" + 'Download Music and Videos from Youtube and Nostalgia Machine' + "\n" + "\n" + "\n")
+        self.tab3.info.insertPlainText(
+            "\n" + 'Download Music and Videos from Youtube and Nostalgia Machine' + "\n" + "\n" + "\n")
 
         self.tab3.info_details = QPlainTextEdit(self.tab3)
         self.tab3.info_details.setGeometry(25, 80, 750, 450)
         self.tab3.info_details.setFont(QtGui.QFont('Arial', 10))
         self.tab3.info_details.insertPlainText("\n" +
-            'You can search your music (free text) or to introduce the link of your favorite video' + "\n" + "\n")
+                                               'You can search your music (free text) or to introduce the link of your favorite video' + "\n" + "\n")
         self.tab3.info_details.insertPlainText(
             'Examples:' + "\n" + "\n")
         self.tab3.info_details.insertPlainText(
@@ -210,7 +219,7 @@ class youdwnl_tabs(QWidget):
         photo_path = './images/Captura.png'
 
         # Pycharm
-        #pixmap = QPixmap(photo_path)
+        # pixmap = QPixmap(photo_path)
 
         # Exe
         pixmap = QPixmap(resource_path(photo_path))
@@ -268,6 +277,15 @@ class youdwnl_tabs(QWidget):
         self.tab4.dwl.setGeometry(1045, 250, 100, 25)
         self.tab4.dwl.clicked.connect(self.download_songs_nostagia_machine)
 
+        '''
+        # Stop button
+        self.tab4.stop_dwl = QPushButton('Stop dwnl', self.tab4)
+        self.tab4.stop_dwl.setToolTip('Click here to stop downloading process')
+        self.tab4.stop_dwl.setFont(QtGui.QFont('Arial', 9))
+        self.tab4.stop_dwl.setGeometry(1045, 350, 100, 25)
+        self.tab4.stop_dwl.clicked.connect(self.thread.stop)
+        '''
+
         # Message text
         self.tab4.textmessage = QLabel(self.tab4)
         self.tab4.textmessage.setStyleSheet('color: black')
@@ -295,19 +313,30 @@ class youdwnl_tabs(QWidget):
         self.tab4.cls = QPushButton('Clear data', self.tab4)
         self.tab4.cls.setToolTip('Click here to clear the data')
         self.tab4.cls.setFont(QtGui.QFont('Arial', 9))
-        self.tab4.cls.setGeometry(325, 85, 100, 25)
+        self.tab4.cls.setGeometry(450, 85, 100, 25)
         # self.tab1.cls.setStyleSheet("QPushButton"
         #                       "{"
         #                       "background-color: #C0C0C0; border-radius: 10px;"
         #                       "}")
         self.tab4.cls.clicked.connect(self.clear_tab4)
 
+        # Select all
+        self.tab4.select_all = QPushButton('Select All', self.tab4)
+        self.tab4.select_all.setToolTip('Click here to select all songs to download')
+        self.tab4.select_all.setFont(QtGui.QFont('Arial', 9))
+        self.tab4.select_all.setGeometry(325, 85, 100, 25)
+        # self.tab1.cls.setStyleSheet("QPushButton"
+        #                       "{"
+        #                       "background-color: #C0C0C0; border-radius: 10px;"
+        #                       "}")
+        self.tab4.select_all.clicked.connect(self.select_all)
+
         # Search result
         self.tab4.tableWidget = QTableWidget(self.tab4)
         self.tab4.tableWidget.setRowCount(1)
-        self.tab4.tableWidget.setColumnCount(4)
+        self.tab4.tableWidget.setColumnCount(5)
         self.tab4.tableWidget.setGeometry(20, 150, 1010, 430)
-        self.tab4.tableWidget.setHorizontalHeaderLabels(['Year', 'Singer', 'Title', 'Link'])
+        self.tab4.tableWidget.setHorizontalHeaderLabels(['Check', 'Year', 'Singer', 'Title', 'Link'])
         self.tab4.tableWidget.horizontalHeader().setStyleSheet(
             "QHeaderView::section { border-bottom: 1px solid green; }")
         # self.tab2.tableWidget.verticalHeader().setDefaultSectionSize(120)
@@ -328,45 +357,14 @@ class youdwnl_tabs(QWidget):
         photo_path = './images/Captura.png'
 
         # Pycharm
-        #pixmap = QPixmap(photo_path)
+        # pixmap = QPixmap(photo_path)
 
         # Exe
         pixmap = QPixmap(resource_path(photo_path))
         self.tab4.photo_label.setPixmap(pixmap)
         self.tab4.photo_label.setGeometry(1035, 10, 111, 89)
 
-    def search_tab4(self):
-        year_to_downlad = str(self.tab4.combo_choice_year.currentText())
-        print('aquiiiiiiiii', year_to_downlad)
-        links, songs = search_songs_nm(year_to_downlad)
-        # print(links)
-        # print(songs)
-        self.tab4.tableWidget.setRowCount(0)
-        y = 0
-        for i in range(0, len(songs)):
-            # print('jjjjjjjjjjjjjjjjjjjjj')
-            # print(list_of_songs_for_year[0]['year'])
-            if (songs[i]['year']) == year_to_downlad:
-                print(songs[i]['year'])
-                print(songs[i]['singer'])
-                print(songs[i]['title'])
 
-                self.tab4.tableWidget.insertRow(y)
-                self.tab4.tableWidget.setItem(y, 0, QTableWidgetItem(str(songs[i]['year'])))
-                self.tab4.tableWidget.setItem(y, 1, QTableWidgetItem(str(songs[i]['singer']).replace('"', '')))
-                self.tab4.tableWidget.setItem(y, 2, QTableWidgetItem(str(songs[i]['title']).replace('"', '')))
-                self.tab4.tableWidget.setItem(y, 3, QTableWidgetItem('https://www.youtube.com/watch?v=' +
-                                                                     str(songs[i]['link2']).replace('"', '')))
-
-                y = + 1
-
-        # print(list_of_songs_for_year[i]['year'])
-        # print(list_of_songs_for_year[i]['title'])
-
-        # for i in songs:
-        #    self.tab4.tableWidget.setItem(i, 0, QTableWidgetItem(str(songs[i]['year'])))
-
-        self.tab4.tableWidget.resizeColumnsToContents()
 
     @QtCore.pyqtSlot()
     def toggle(self):
@@ -388,6 +386,30 @@ class youdwnl_tabs(QWidget):
             print('Unchecked')
             rows_checked.remove(row)
 
+    def select_all(self):
+        rowCount = self.tab4.tableWidget.rowCount()
+        check_box_list = []
+        check_box_in_table = ''
+        for i in range(rowCount):
+            check_box_list.append('checkbox' + str(i))
+            check_box_in_table = check_box_list[i]
+            self.tab4.check_box_in_table = QCheckBox("dwl", self.tab4)
+            self.tab4.tableWidget.setCellWidget(i, 0, self.tab4.check_box_in_table)
+            self.tab4.check_box_in_table.setChecked(True)
+            rows_checked.append(i)
+
+
+    def clickBox_tab4(self, state):
+
+        row = self.tab4.tableWidget.currentRow()
+        print(row)
+        if state == QtCore.Qt.Checked:
+            print('Checked')
+            rows_checked.append(row)
+        else:
+            print('Unchecked')
+            rows_checked.remove(row)
+
     # Process End
     def finished_tab2(self):
         self.tab2.textmessage.setText('Data download completed')
@@ -399,10 +421,9 @@ class youdwnl_tabs(QWidget):
         self.tab4.pbar4.setValue(0)
         print('Finito')
 
-
     # Dowloading messages
     def end_video_dwnld_tab2(self, val1, val2):
-        message = "Downloading {} videos of {}.".format(val1, val2)
+        message = "Downloading {} file of {}.".format(val1, val2)
         self.tab2.textmessage.setText(message)
 
     def end_audio_created_tab2(self, val1, val2):
@@ -411,7 +432,7 @@ class youdwnl_tabs(QWidget):
         self.tab2.textmessage.setText(message)
 
     def end_video_dwnld_tab4(self, val1, val2):
-        message = "Downloading {} videos of {}.".format(val1, val2)
+        message = "Downloading {} file of {}.".format(val1, val2)
         self.tab4.textmessage.setText(message)
 
     def end_audio_created_tab4(self, val1, val2):
@@ -432,7 +453,6 @@ class youdwnl_tabs(QWidget):
     def setProgressVal_tab4(self, val):
         self.tab4.pbar4.setValue(val)
 
-
     def clear_tab1(self):
         self.tab1.linktextbox.setText('')
         self.tab1.boxpl.setChecked(False)
@@ -450,16 +470,17 @@ class youdwnl_tabs(QWidget):
     def clear_tab4(self):
         self.tab4.textmessage.setText("Ready to download")
         self.tab4.tableWidget.setRowCount(0)
-        self.tab4.tableWidget.setColumnCount(4)
-        self.tab4.tableWidget.setHorizontalHeaderLabels(['Year', 'Singer', 'Title', 'Link'])
+        self.tab4.tableWidget.setColumnCount(5)
+        self.tab4.tableWidget.setHorizontalHeaderLabels(['Check', 'Year', 'Singer', 'Title', 'Link'])
         self.tab4.tableWidget.setRowCount(1)
         self.tab4.pbar4.setValue(0)
+        DownloadData.terminate(self)
 
     def download_search_result(self):
         # Download options: Only Video, Only Music, Video & Music
         dwl_choice = str(self.tab2.combo_choice.currentText())
         check_box_list = []
-        print('search:', dwl_choice)
+        #print('search:', dwl_choice)
 
         video_id_list_search = []
 
@@ -492,14 +513,66 @@ class youdwnl_tabs(QWidget):
         self.tab2.textmessage.setText('Downloading data')
 
 
+    def search_tab4(self):
+        year_to_downlad = str(self.tab4.combo_choice_year.currentText())
+        print('aquiiiiiiiii', year_to_downlad)
+        links, songs = search_songs_nm(year_to_downlad)
+        # print(links)
+        # print(songs)
+        self.tab4.tableWidget.setRowCount(0)
+        y = 0
+        check_box_list = []
+        check_box_in_table = ''
+        for i in range(0, len(songs)):
+            # print('jjjjjjjjjjjjjjjjjjjjj')
+            # print(list_of_songs_for_year[0]['year'])
+            if (songs[i]['year']) == year_to_downlad:
+                print(songs[i]['year'])
+                print(songs[i]['singer'])
+                print(songs[i]['title'])
+
+                self.tab4.tableWidget.insertRow(y)
+                check_box_list.append('checkbox' + str(y))
+                check_box_in_table = check_box_list[y]
+                self.tab4.check_box_in_table = QCheckBox("dwl", self.tab4)
+                self.tab4.tableWidget.setCellWidget(y, 0, self.tab4.check_box_in_table)
+                self.tab4.check_box_in_table.stateChanged.connect(self.clickBox_tab4)
+                self.tab4.tableWidget.setItem(y, 1, QTableWidgetItem(str(songs[i]['year'])))
+                self.tab4.tableWidget.setItem(y, 2, QTableWidgetItem(str(songs[i]['singer']).replace('"', '')))
+                self.tab4.tableWidget.setItem(y, 3, QTableWidgetItem(str(songs[i]['title']).replace('"', '')))
+                self.tab4.tableWidget.setItem(y, 4, QTableWidgetItem('https://www.youtube.com/watch?v=' +
+                                                                     str(songs[i]['link2']).replace('"', '')))
+
+                y = + 1
+
+        # print(list_of_songs_for_year[i]['year'])
+        # print(list_of_songs_for_year[i]['title'])
+
+        # for i in songs:
+        #    self.tab4.tableWidget.setItem(i, 0, QTableWidgetItem(str(songs[i]['year'])))
+
+        self.tab4.tableWidget.resizeColumnsToContents()
+
     def download_songs_nostagia_machine(self):
         # Nostalgia Machine page list of songs
         year_to_downlad = str(self.tab4.combo_choice_year.currentText())
         dwl_choice = str(self.tab4.combo_choice.currentText())
         links, songs = search_songs_nm(year_to_downlad)
 
+        links_to_dwnl = []
+
+        rowCount = self.tab4.tableWidget.rowCount()
+        for i in range(0, rowCount):
+            if i in rows_checked:
+                print(rows_checked)
+                print(links[i])
+                links_to_dwnl.append(links[i])
+
+        #print('linkks22222', links_to_dwnl)
+
+
         # Define the thread for downloading
-        self.dwnl_thread = DownloadData(links,
+        self.dwnl_thread = DownloadData(links_to_dwnl,
                                         dwl_choice)  # Any other args, kwargs are passed to the run function
         self.dwnl_thread.signal_end_download.connect(self.finished_tab4)
 
@@ -520,11 +593,14 @@ class youdwnl_tabs(QWidget):
 
     def oh_no_search(self):
         # Data to search to download
+
         search_data = self.tab2.searchtextbox.text()
 
-        print('oooooooooooooo', search_data)
+
+
         if search_data == '':
             self.tab2.textmessage.setText("Insert a title")
+            self.tab2.searchtext.setText("Search!")
             return 0
 
         search_data_formatted = search_data
@@ -581,7 +657,6 @@ class youdwnl_tabs(QWidget):
             labels_list.append('lable' + str(i))
 
         print(labels_list)
-
         self.tab2.tableWidget.setVisible(True)
 
         # Search free text
@@ -684,3 +759,6 @@ class youdwnl_tabs(QWidget):
             self.tab2.tableWidget.setItem(0, 4, QTableWidgetItem(link['duration']))
             self.tab2.tableWidget.setItem(0, 5, QTableWidgetItem(link['views']))
             self.tab2.tableWidget.resizeColumnsToContents()
+
+        self.tab2.searchtext.setText("Search completed")
+        self.tab2.textmessage.setText("Ready to download")
