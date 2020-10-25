@@ -17,9 +17,6 @@ max_results = 20
 rows_checked = []
 download_type = ''
 
-list_nostalgia_machine = []
-
-
 def resource_path(relative_path):
     if hasattr(sys, '_MEIPASS'):
         print(' ')
@@ -243,8 +240,8 @@ class youdwnl_tabs(QWidget):
         self.tab4.label = QLabel(self.tab4)
         self.tab4.label.setStyleSheet('color: black')
         self.tab4.label.setFont(QtGui.QFont('Arial', 10))
-        self.tab4.label.setText("Download your music or video from The Nostalgia Machine Page")
-        self.tab4.label.setGeometry(50, 20, 500, 20)
+        self.tab4.label.setText("Download your music or video from The Nostalgia Machine Page (http://www.thenostalgiamachine.com)")
+        self.tab4.label.setGeometry(50, 20, 750, 20)
 
         # Combo choice music video
         self.tab4.combo_choice = QComboBox(self.tab4)
@@ -477,6 +474,7 @@ class youdwnl_tabs(QWidget):
         DownloadData.terminate(self)
 
     def download_search_result(self):
+        global rows_checked
         # Download options: Only Video, Only Music, Video & Music
         dwl_choice = str(self.tab2.combo_choice.currentText())
         check_box_list = []
@@ -511,9 +509,12 @@ class youdwnl_tabs(QWidget):
         self.progressbar_thread.start()
 
         self.tab2.textmessage.setText('Downloading data')
+        rows_checked = []
 
 
     def search_tab4(self):
+        global rows_checked
+        rows_checked = []
         year_to_downlad = str(self.tab4.combo_choice_year.currentText())
         print('aquiiiiiiiii', year_to_downlad)
         links, songs = search_songs_nm(year_to_downlad)
@@ -527,6 +528,7 @@ class youdwnl_tabs(QWidget):
             # print('jjjjjjjjjjjjjjjjjjjjj')
             # print(list_of_songs_for_year[0]['year'])
             if (songs[i]['year']) == year_to_downlad:
+
                 print(songs[i]['year'])
                 print(songs[i]['singer'])
                 print(songs[i]['title'])
@@ -552,24 +554,32 @@ class youdwnl_tabs(QWidget):
         #    self.tab4.tableWidget.setItem(i, 0, QTableWidgetItem(str(songs[i]['year'])))
 
         self.tab4.tableWidget.resizeColumnsToContents()
+        rows_checked = []
 
     def download_songs_nostagia_machine(self):
+        global links
+        global songs
+        global rows_checked
         # Nostalgia Machine page list of songs
         year_to_downlad = str(self.tab4.combo_choice_year.currentText())
         dwl_choice = str(self.tab4.combo_choice.currentText())
-        links, songs = search_songs_nm(year_to_downlad)
+        #links, songs = search_songs_nm(year_to_downlad)
 
         links_to_dwnl = []
+
+        print(links_to_dwnl)
 
         rowCount = self.tab4.tableWidget.rowCount()
         for i in range(0, rowCount):
             if i in rows_checked:
                 print(rows_checked)
-                print(links[i])
-                links_to_dwnl.append(links[i])
+                dwl_link_val_tab4 = self.tab4.tableWidget.item(i, 4).text()  # ok
+                print(dwl_link_val_tab4)
+                links_to_dwnl.append(dwl_link_val_tab4)
 
         #print('linkks22222', links_to_dwnl)
 
+        print('likkkkkkkk to dwnl', links_to_dwnl)
 
         # Define the thread for downloading
         self.dwnl_thread = DownloadData(links_to_dwnl,
@@ -589,14 +599,14 @@ class youdwnl_tabs(QWidget):
         self.progressbar_thread.start()
 
         self.tab4.textmessage.setText('Downloading data')
+        rows_checked = []
 
 
     def oh_no_search(self):
         # Data to search to download
-
+        global rows_checked
+        rows_checked = []
         search_data = self.tab2.searchtextbox.text()
-
-
 
         if search_data == '':
             self.tab2.textmessage.setText("Insert a title")
@@ -762,3 +772,4 @@ class youdwnl_tabs(QWidget):
 
         self.tab2.searchtext.setText("Search completed")
         self.tab2.textmessage.setText("Ready to download")
+        rows_checked = []

@@ -17,6 +17,7 @@ number_of_not_valid_videos = 0
 
 def my_hook(d):
     global count_percent
+    global number_of_downloads
     global number_of_downloads_ended
     global number_of_not_valid_videos
 
@@ -35,6 +36,7 @@ def my_hook(d):
             count_percent = 0
         else:
             count_percent = 100
+            number_of_downloads = 0
 
         #print('finished', count_percent)
 
@@ -271,4 +273,5 @@ class Progressbar(QThread):
 
         val_end = 0
         print('finito progress bar')
+        number_of_downloads = 0
         self.signal_prgb_end.emit(val_end)
